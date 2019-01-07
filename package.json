@@ -1,0 +1,34 @@
+{
+  "name": "ordersbook-ui",
+  "version": "1.0.0",
+  "description": "Exchange for eosio.token&#39;s",
+  "author": "avral",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "lint": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
+    "precommit": "npm run lint"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.0.0",
+    "bootstrap": "4.2.1",
+    "bootstrap-utilities": "^4.1.3",
+    "cross-env": "^5.2.0",
+    "element-ui": "^2.4.6",
+    "eosjs": "^20.0.0-beta3",
+    "nuxt": "^2.0.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.1",
+    "eslint": "^5.0.1",
+    "eslint-loader": "^2.0.0",
+    "eslint-plugin-html": "^5.0.0",
+    "eslint-plugin-vue": "^4.0.0",
+    "nodemon": "^1.11.0",
+    "pug": "^2.0.3",
+    "pug-plain-loader": "^1.0.0"
+  }
+}
