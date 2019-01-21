@@ -8,14 +8,11 @@ div
     .leader Token precision must be 4
     h1.leader Sell
 
-    el-input(placeholder="Token contract" v-model="form.sell.contract").mt-2
-    el-input(placeholder="Token symbol" v-model="form.sell.symbol").mt-2
-    el-input(placeholder="Token amount" v-model="form.sell.amount" type="number" step="0.0001").mt-2
+    el-select(v-if="user" v-model="tokenSelect", placeholder='Sell token' @change="sellChange").w-100
+      el-option(v-for="b in user.balances" :key="b.currency + '@' + b.contract" :label="b.currency + '@' + b.contract",
+      :value="b.currency + '@' + b.contract")
 
-    // TODO Selected with 
-    //el-select(v-v-model='form.region', placeholder='Sell token').w-100
-      el-option(label='EOS@eosio.token', value='EOS@eosio.token')
-        //el-option(label='EOS@eosio.token', value='EOS@eosio.token')
+    el-input(placeholder="Token amount" v-model="form.sell.amount" type="number" step="0.0001").mt-2
 
     hr
     h1.leader Buy
@@ -33,9 +30,9 @@ div
 </template>
 
 <script>
-import { Api, JsonRpc, RpcError, Serialize } from 'eosjs';
+import { mapGetters } from 'vuex'
 
-const rpc = new JsonRpc('http://127.0.0.1:8888', { fetch });
+import { Api, JsonRpc, RpcError, Serialize } from 'eosjs';
 
 export default {
   data() {
@@ -61,8 +58,13 @@ export default {
         }
       },
 
-      formLabelWidth: '120px'
+      formLabelWidth: '120px',
+      tokenSelect: ''
     }
+  },
+
+  computed: {
+    ...mapGetters(['user'])
   },
 
   created() {
@@ -70,6 +72,11 @@ export default {
   },
 
   methods: {
+    sellChange(a) {
+      this.form.sell.symbol = a.split('@')[0]
+      this.form.sell.contract = a.split('@')[1]
+    },
+
     submit() {
       // TODO Проверки/валидация
 
@@ -91,6 +98,7 @@ export default {
       }).then(async () => {
         this.$emit('submit', form)
         this.visible = false
+      }).catch(() => {
       })
     }
   },

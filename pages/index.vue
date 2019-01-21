@@ -47,8 +47,10 @@ div
                 el-button(size='mini', type="success" @click="buy(scope.row)") Buy
 
     el-tab-pane(label='My balances')
-      //el-table(:data="balances", style='width: 100%')
-        el-table-column(prop='funds', label='Balance', width='230')
+      el-table(v-if="user" :data="user.balances", style='width: 100%')
+        el-table-column(prop='contract', label='contract', width='230')
+        el-table-column(prop='currency', label='currency', width='230')
+        el-table-column(prop='amount', label='amount', width='230')
     el-tab-pane(label='History')
       el-table(:data="history", style='width: 100%')
         el-table-column(prop='block_time', label='Date', width='230')
@@ -64,6 +66,7 @@ div
 import NewOrderForm from '~/components/NewOrderForm.vue'
 import config from '~/config/dev.js'
 
+import axios from 'axios'
 import ScatterJS from 'scatterjs-core'
 import ScatterEOS from 'scatterjs-plugin-eosjs2'
 import { Api, JsonRpc, RpcError } from 'eosjs'
@@ -144,12 +147,18 @@ export default {
     },
 
     login() {
-      ScatterJS.connect('Ordersbook', { network }).then(connected => {
+      ScatterJS.connect('Ordersbook', { network }).then(async connected => {
         if(!connected) {
           // TODO Скатер не подключился
           alert('Scatter not connected')
         } else {
-          ScatterJS.login().then(r => this.$store.commit('setUser', r.accounts[0]))
+          let r = await ScatterJS.login()
+          let account = r.accounts[0]
+
+          let { data: { balances }} = await axios.get(`https://lightapi.eosgeneva.io/api/account/jungle/${account.name}`)
+          account.balances = balances
+
+          this.$store.commit('setUser', account)
         }
       })
     },
@@ -190,6 +199,7 @@ export default {
         this.$notify({ title: 'Place order', message: r.processed.action_traces[0].inline_traces[1].console, type: 'success' })
         this.fetch()
       } catch (e) {
+        this.$notify({ title: 'Place order', message: e.message, type: 'error' })
         console.log(e)
       } finally {
         loading.close();
