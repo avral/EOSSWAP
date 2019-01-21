@@ -1,6 +1,8 @@
 <template lang="pug">
 .container
-  nuxt
+  .row
+    .col-lg-9.m-auto
+      nuxt
 </template>
 
 <style>
