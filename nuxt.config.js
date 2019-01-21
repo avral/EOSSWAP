@@ -1,5 +1,8 @@
 const pkg = require('./package')
 
+const isSPA = process.argv.includes('--spa')
+const isDev = process.env.npm_lifecycle_event == 'dev'
+
 module.exports = {
   mode: 'spa',
 
@@ -66,6 +69,15 @@ module.exports = {
           exclude: /(node_modules)/
         })
       }
+
+      if (isSPA) {
+        config.output.publicPath = './_nuxt/'
+      }
     }
-  }
+  },
+
+  router: {
+    mode: isSPA ? 'hash' : 'history',
+    linkActiveClass: 'active',
+  },
 }
