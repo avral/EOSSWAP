@@ -171,11 +171,13 @@ export default {
           loading.close()
         }
       } else {
-        this.$notify({ title: 'Scatter not found', message: 'Pleace install Scatter', type: 'info' })
+        this.$notify({ title: 'Scatter not found', message: 'Pleace install or unlock Scatter', type: 'info' })
       }
     },
 
     async buy({ id, buy }) {
+      if (!this.user) return this.$notify({ title: 'Authorization', message: 'Pleace login first', type: 'info' })
+
       let memo = JSON.stringify({
         action: "fill",
         order_id: id
