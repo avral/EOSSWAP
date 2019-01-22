@@ -2,8 +2,7 @@
 // TODO App need decomposition
 div
   .display-4 Orderbook: eosio.token exchanger
-  //el-alert(title="Scatter in not connected:" :closable="false"  show-icon type="info" v-if="!scatterConnected")
-  el-alert(title="Scatter in not connected:" :closable="false" show-icon type="info")
+  el-alert(title="Scatter in not connected:" :closable="false"  show-icon type="info" v-if="!scatterConnected")
     span.ml-2 Unlock or install  
     a(href="https://get-scatter.com/" target="_blank") Scatter
     i(@click="scatterConnect" size="mini").el-alert__closebtn Update
@@ -160,15 +159,13 @@ export default {
 
         try {
           let r = await ScatterJS.login()
-          let account = r.accounts[0]
 
-          let { data: { balances }} = await axios.get(`https://lightapi.eosgeneva.io/api/account/jungle/${account.name}`)
-          account.balances = balances
-          this.$store.commit('setUser', account)
+          this.$store.commit('setUser', r.accounts[0])
         } catch(e) {
           this.$notify({ title: 'Scatter login error', message: e.message, type: 'error' })
         } finally {
           loading.close()
+          this.fetch()
         }
       } else {
         this.$notify({ title: 'Scatter not found', message: 'Pleace install or unlock Scatter', type: 'info' })
@@ -178,10 +175,12 @@ export default {
     async buy({ id, buy }) {
       if (!this.user) return this.$notify({ title: 'Authorization', message: 'Pleace login first', type: 'info' })
 
-      let memo = JSON.stringify({
-        action: "fill",
-        order_id: id
-      })
+      const loading = this.$loading({
+        lock: true,
+        text: 'Wait for Scatter',
+      });
+
+      let memo = JSON.stringify({ action: "fill", order_id: id })
 
       try {
         await tranfer(buy.contract, this.user.name, buy.quantity, memo)
@@ -189,6 +188,8 @@ export default {
         this.fetch()
       } catch (e) {
         console.log(e)
+      } finally {
+        loading.close()
       }
     },
 
@@ -221,14 +222,22 @@ export default {
     },
 
     async fetch() {
+      // Orders
       rpc.get_table_rows({code: config.contract, scope: config.contract, table: 'orders'}).then(r => this.orders = r.rows)
-      //rpc.get_table_rows({code: 'ordersbook', scope: 'alice', table: 'balances'}).then(r => this.balances = r.rows)
 
+      // History
       rpc.history_get_actions(config.contract).then(r => {
         this.history = r.actions.filter(h => {
           return !(['setcode', 'setabi'].includes(h.action_trace.act.name)) && h.action_trace.act.authorization[0].actor != config.contract
         })
       })
+
+      // User balances
+      if (this.user) {
+        axios.get(`https://lightapi.eosgeneva.io/api/account/jungle/${this.user.name}`).then(r => {
+          this.$store.commit('setUser', { ...this.user, balances: r.data.balances })
+        })
+      }
     },
   }
 }
