@@ -85,7 +85,6 @@ export default {
       form.sell.amount = parseFloat(form.sell.amount).toFixed(4)
       form.buy.amount = parseFloat(form.buy.amount).toFixed(4)
 
-
       let { buy, sell } = form
 
       let quantity = `${sell.amount} ${sell.symbol}`

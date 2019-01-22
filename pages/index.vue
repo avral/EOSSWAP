@@ -1,6 +1,9 @@
 <template lang="pug">
 div
   .display-4 Orderbook: eosio.token exchanger
+  el-alert(title="Scatter in not connected" :closable="false" type="warning"
+  v-if="!scatterConnected").d-flex
+    i(@click="scatterConnect" size="mini").el-alert__closebtn Update
 
   el-tabs(type='border-card').mt-4
     el-tab-pane(label="Orders")
@@ -121,7 +124,7 @@ export default {
     return {
       orders: [],
       history: [],
-      // balances: [],
+      scatterConnected: false,
 
       to_assets: [],
 
@@ -138,7 +141,7 @@ export default {
 
   created() {
     this.fetch()
-    this.login()
+    this.scatterConnect()
   },
 
   methods: {
@@ -146,21 +149,37 @@ export default {
       ScatterJS.logout().then(this.$store.commit('setUser', null));
     },
 
-    login() {
-      ScatterJS.connect('Ordersbook', { network }).then(async connected => {
-        if(!connected) {
-          // TODO Скатер не подключился
-          alert('Scatter not connected')
-        } else {
+    async scatterConnect() {
+      try {
+        this.scatterConnected = await ScatterJS.connect('Ordersbook', { network })
+      } catch(e) {
+        this.$notify({ title: 'Scatter error', message: e.message, type: 'error' })
+      }
+    },
+
+    async login() {
+      this.loginLoading = true
+
+      if(this.scatterConnected) {
+        const loading = this.$loading({
+          lock: true,
+          text: 'Wait for Scatter',
+        });
+
+        try {
           let r = await ScatterJS.login()
           let account = r.accounts[0]
 
           let { data: { balances }} = await axios.get(`https://lightapi.eosgeneva.io/api/account/jungle/${account.name}`)
           account.balances = balances
-
           this.$store.commit('setUser', account)
+        } catch(e) {
+          this.$notify({ title: 'Scatter login error', message: e.message, type: 'error' })
+        } finally {
+          loading.close()
         }
-      })
+
+      }
     },
 
     async buy({ id, buy }) {
