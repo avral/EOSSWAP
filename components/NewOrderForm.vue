@@ -1,38 +1,50 @@
 <template lang="pug">
 div
-  el-button(size="medium" type="primary" @click="visible = true").ml-auto
+  el-button(size="medium" type="primary" @click="open").ml-auto
     span
       slot
 
-  el-dialog(title="Create new order", :visible.sync="visible")
-    .leader Token precision must be 4
-    h1.leader Sell
+  el-dialog(v-if="user" title="Create new order", :visible.sync="visible" width="50%")
+    el-form(ref="form" :model="form" label-width="120px" width="50%" :rules="rules")
+      h1.leader Sell
 
-    el-select(v-if="user" v-model="tokenSelect", placeholder='Sell token' @change="sellChange").w-100
-      el-option(v-for="b in user.balances" :key="b.currency + '@' + b.contract" :label="b.currency + '@' + b.contract",
-      :value="b.currency + '@' + b.contract")
+      el-form-item(label="Sell token")
+        el-select(v-model="tokenSelect", placeholder='Sell token' @change="sellChange").w-100
+          el-option(v-for="b in user.balances" :key="b.currency + '@' + b.contract" :label="b.currency + '@' + b.contract",
+          :value="b.currency + '@' + b.contract")
 
-    el-input(placeholder="Token amount" v-model="form.sell.amount" type="number" step="0.0001").mt-2
+      el-form-item(v-if="tokenSelect" label="Token amount")
+        el-input(placeholder="0.0001" v-model="form.sell.amount" type="number" step="0.0001" @change="parseAmounts")
 
-    hr
-    h1.leader Buy
+      //div(v-if="form.sell.amount")
+      div
+        hr
 
-    el-input(placeholder="Token contract" v-model="form.buy.contract").mt-2
-      //template(slot="prepend") Account
-    el-input(placeholder="Token symbol" v-model="form.buy.symbol").mt-2
-      //template(slot="prepend") Symbol 
-    el-input(placeholder="Token amount"  v-model="form.buy.amount" type="number").mt-2
-      //template(slot="prepend") Amount 
+        h1.leader Buy
 
-    span.dialog-footer(slot='footer')
-      //el-button(@click="$emit('close')") Cancel
-      el-button(type='primary', @click="submit") Create order
+        //el-form-item(v-if="form.sell.amount" label="Token contract" prop="buyContract")
+        el-form-item(label="Token contract" prop="buy.contract")
+          el-input(placeholder="eosio.token betdicetoken ridlridlcoin eosiomeetone etc.." v-model="form.buy.contract")
+
+        el-form-item(v-if="form.buy.contract" label="Token symbol" prop="buy.symbol")
+          // TODO Uppercase
+          el-input(placeholder="DICE TRYBE CAT EOS etc.." v-model="form.buy.symbol").upperinput
+
+        el-form-item(v-if="form.buy.symbol" label="Token amount")
+          el-input(placeholder="0.0001"  v-model="form.buy.amount" type="number" @change="parseAmounts").mt-2
+
+        //span.dialog-footer
+          //el-button(@click="$emit('close')") Cancel
+          el-button(type='primary', @click="submit") Create order
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import config from '~/config/dev.js'
+import { JsonRpc } from 'eosjs'
 
-import { Api, JsonRpc, RpcError, Serialize } from 'eosjs';
+const rpc = new JsonRpc(config.host, { fetch });
+
+import { mapGetters } from 'vuex'
 
 export default {
   data() {
@@ -58,6 +70,32 @@ export default {
         }
       },
 
+      rules: {
+        "buy.contract": {
+          trigger: 'blur',
+          validator: async (rule, value, callback) => {
+            try {
+              await rpc.get_account(value)
+              callback()
+            } catch (e) {
+              callback(new Error('Account not exists'))
+            }
+          },
+        },
+
+        "buy.symbol": {
+          trigger: 'blur',
+          validator: async (rule, value, callback) => {
+            let r = await rpc.get_currency_stats(this.form.buy.contract, value)
+
+            if (value in r)
+              callback()
+            else
+              callback(new Error(`No ${value} symbol in ${this.form.buy.contract} contract`))
+          },
+        }
+      },
+
       formLabelWidth: '120px',
       tokenSelect: ''
     }
@@ -72,18 +110,27 @@ export default {
   },
 
   methods: {
+    open() {
+      if (this.user)
+        this.visible = true
+      else
+        this.$notify({ title: 'Login', message: 'Pleace login first', type: 'info' })
+    },
+
     sellChange(a) {
       this.form.sell.symbol = a.split('@')[0]
       this.form.sell.contract = a.split('@')[1]
+    },
+
+    parseAmounts() {
+      this.form.sell.amount = parseFloat(this.form.sell.amount).toFixed(4)
+      this.form.buy.amount = parseFloat(this.form.buy.amount).toFixed(4)
     },
 
     submit() {
       // TODO Проверки/валидация
 
       let form = this.form
-
-      form.sell.amount = parseFloat(form.sell.amount).toFixed(4)
-      form.buy.amount = parseFloat(form.buy.amount).toFixed(4)
 
       let { buy, sell } = form
 
@@ -103,3 +150,16 @@ export default {
   },
 }
 </script>
+
+<style>
+.el-dialog__body {
+  padding: 10px 70px;
+}
+
+.upperinput {
+    text-transform: uppercase;
+}
+.upperinput:placeholder-shown {
+    text-transform: none;
+}
+</style>
