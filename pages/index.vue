@@ -1,8 +1,11 @@
 <template lang="pug">
+// TODO App need decomposition
 div
   .display-4 Orderbook: eosio.token exchanger
-  el-alert(title="Scatter in not connected" :closable="false" type="warning"
-  v-if="!scatterConnected").d-flex
+  //el-alert(title="Scatter in not connected:" :closable="false"  show-icon type="info" v-if="!scatterConnected")
+  el-alert(title="Scatter in not connected:" :closable="false" show-icon type="info")
+    span.ml-2 Unlock or install  
+    a(href="https://get-scatter.com/" target="_blank") Scatter
     i(@click="scatterConnect" size="mini").el-alert__closebtn Update
 
   el-tabs(type='border-card').mt-4
@@ -10,23 +13,14 @@ div
       .row
         .col
           .d-flex
-            //el-select(v-model="value10" filterable default-first-option, placeholder="Change from")
-            //  el-option(v-for="asset in balances", :key="asset.funds", :label="asset.funds", :value="asset.funds")
-
-            //i.el-icon-arrow-right.align-self-center.ml-4
-
-            //el-select(v-model='value10' filterable default-first-option, placeholder='Change to').ml-4
-            //  el-option(v-for='item in options', :key='item.value', :label='item.label', :value='item.value')
-
             new-order-form(@submit="newOrder") Create new order
 
             .ml-auto
-              .lead(v-if="user") Login as: {{ $store.state.user.name }}
-              .lead(v-if="user")
-                el-button(size="mini" @click="logout") logout
+              span(v-if="user") Login as: 
+                a(:href="'https://jungle.eosx.io/account/' + user.name" target="_blank") {{ $store.state.user.name }}
+                el-button(v-if="user" size="mini" @click="logout").ml-2 logout
 
-
-              el-button(@click="login").ml-auto(v-if="!user") login
+              el-button(@click="login" size="mini").ml-auto(v-if="!user") login
       .row
         .col
           el-table(:data="orders")
@@ -158,8 +152,6 @@ export default {
     },
 
     async login() {
-      this.loginLoading = true
-
       if(this.scatterConnected) {
         const loading = this.$loading({
           lock: true,
@@ -178,7 +170,8 @@ export default {
         } finally {
           loading.close()
         }
-
+      } else {
+        this.$notify({ title: 'Scatter not found', message: 'Pleace install Scatter', type: 'info' })
       }
     },
 

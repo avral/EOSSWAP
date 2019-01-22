@@ -5,7 +5,7 @@ div
       slot
 
   el-dialog(v-if="user" title="Create new order", :visible.sync="visible" width="50%")
-    el-form(ref="form" :model="form" label-width="120px" width="50%" :rules="rules")
+    el-form(ref="form" :model="form" label-position="left" :rules="rules")
       h1.leader Sell
 
       el-form-item(label="Sell token")
@@ -16,8 +16,7 @@ div
       el-form-item(v-if="tokenSelect" label="Token amount")
         el-input(placeholder="0.0001" v-model="form.sell.amount" type="number" step="0.0001" @change="parseAmounts")
 
-      //div(v-if="form.sell.amount")
-      div
+      div(v-if="form.sell.amount")
         hr
 
         h1.leader Buy
@@ -33,9 +32,8 @@ div
         el-form-item(v-if="form.buy.symbol" label="Token amount")
           el-input(placeholder="0.0001"  v-model="form.buy.amount" type="number" @change="parseAmounts").mt-2
 
-        //span.dialog-footer
-          //el-button(@click="$emit('close')") Cancel
-          el-button(type='primary', @click="submit") Create order
+        span.dialog-footer
+          el-button(type='primary', @click="submit").mt-3.w-100 Create order
 </template>
 
 <script>
@@ -152,7 +150,7 @@ export default {
 </script>
 
 <style>
-.el-dialog__body {
+.el-form {
   padding: 10px 70px;
 }
 
