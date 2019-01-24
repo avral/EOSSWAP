@@ -80,13 +80,6 @@ const network = ScatterJS.Network.fromJson({
 const rpc = new JsonRpc(config.host, { fetch });
 const eos = ScatterJS.eos(network, Api, {rpc, beta3:true})
 
-// TODO Dev setup
-//import JsSignatureProvider from 'eosjs/dist/eosjs-jssig';
-//const rpc = new JsonRpc('http://127.0.0.1:8888', { fetch });
-//const defaultPrivateKey = "5JTQrUhAhAVmcHdjREL1D3UxmBvCq69jupABgyA28SAtVGp8iMs"; // user bob
-//const signatureProvider = new JsSignatureProvider([defaultPrivateKey]);
-//const eos = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
-
 // To Utils
 function tranfer(contract, actor, quantity, memo) {
   return eos.transact({
@@ -180,13 +173,13 @@ export default {
         text: 'Wait for Scatter',
       });
 
-      let memo = JSON.stringify({ action: "fill", order_id: id })
-
       try {
-        await tranfer(buy.contract, this.user.name, buy.quantity, memo)
+        await tranfer(buy.contract, this.user.name, buy.quantity, `fill|${id}`)
+
         this.$notify({ title: 'Success', message: 'This is a success message', type: 'success' })
         this.fetch()
       } catch (e) {
+        this.$notify({ title: 'Place order', message: e.message, type: 'error' })
         console.log(e)
       } finally {
         loading.close()
@@ -197,20 +190,14 @@ export default {
       let quantity = `${sell.amount} ${sell.symbol}`
       let sell_quantity = `${buy.amount} ${buy.symbol}@${buy.contract}`
 
-      let memo = JSON.stringify({
-        action: "place",
-        e_asset: sell_quantity
-      })
-
-      //const h = this.$createElement;
-
       const loading = this.$loading({
         lock: true,
         text: 'Wait for Scatter',
       });
 
       try {
-        let r = await tranfer(sell.contract, this.user.name, quantity, memo)
+        await tranfer(sell.contract, this.user.name, quantity, `place|${quantity}`)
+
         this.$notify({ title: 'Place order', message: r.processed.action_traces[0].inline_traces[1].console, type: 'success' })
         this.fetch()
       } catch (e) {
