@@ -6,6 +6,10 @@ const isDev = process.env.npm_lifecycle_event == 'dev'
 module.exports = {
   mode: 'spa',
 
+  env: {
+    isDev,
+  },
+
   /*
   ** Headers of the page
   */
