@@ -12,7 +12,7 @@ const jungle = {
 
   chainId: 'e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473',
   host: 'https://jungle2.cryptolions.io',
-  port: 80,
+  port: 443,
   protocol: 'https',
 }
 
@@ -21,4 +21,5 @@ const eos_mainet = {
 
 }
 
-export default process.env.isDev ? local : jungle
+export default process.env.isDev ? jungle : eos_mainet
+//export default process.env.isDev ? local : jungle
