@@ -11,7 +11,7 @@ const jungle = {
   contract: 'avralsjungle',
 
   chainId: 'e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473',
-  host: 'https://jungle2.cryptolions.io',
+  host: 'https://api.jungle.alohaeos.com',
   port: 443,
   protocol: 'https',
 }

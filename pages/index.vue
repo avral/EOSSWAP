@@ -43,7 +43,9 @@ div
                 el-button(size='mini', type="success" @click="buy(scope.row)") Buy
 
     el-tab-pane(label='My balances')
-      el-table(v-if="user" :data="user.balances", style='width: 100%')
+      el-alert(v-if="!user" title="Pleace login" :closable="false" show-icon type="info")
+
+      el-table(v-else :data="user.balances", style='width: 100%')
         el-table-column(prop='contract', label='contract', width='230')
         el-table-column(prop='currency', label='currency', width='230')
         el-table-column(prop='amount', label='amount', width='230')
