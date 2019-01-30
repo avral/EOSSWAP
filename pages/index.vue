@@ -23,12 +23,12 @@ div
       .row
         .col
           el-table(:data="orders")
-            el-table-column(label="Order id" width="100")
+            el-table-column(label="ID" width="50")
               template(slot-scope='scope')
                 //i.el-icon-time
                 span(style='margin-left: 10px') {{ scope.row.id }}
 
-            el-table-column(label="Owner" width="100")
+            el-table-column(label="Owner" width="120")
               template(slot-scope="scope")
                 .name-wrapper(slot="reference")
                   el-tag(size="medium") {{ scope.row.maker }}
@@ -38,9 +38,15 @@ div
                 span Sell: {{ scope.row.sell.quantity }}@{{ scope.row.sell.contract }}
                 |  for: {{ scope.row.buy.quantity }}@{{ scope.row.buy.contract }}
 
-            el-table-column(label='Operations' width="100")
+            el-table-column(label='Operations' width="100" v-if="user")
               template(slot-scope='scope')
-                el-button(size='mini', type="success" @click="buy(scope.row)") Buy
+                el-button(
+                  v-if="scope.row.maker == user.name"
+                  size='mini',
+                  type="warning"
+                  @click="cancelOrder(scope.row)"
+                ) Cancel
+                el-button(v-else size='mini', type="success" @click="buy(scope.row)") Buy
 
     el-tab-pane(label='My balances')
       el-alert(v-if="!user" title="Pleace login" :closable="false" show-icon type="info")
@@ -50,11 +56,7 @@ div
         el-table-column(prop='currency', label='currency', width='230')
         el-table-column(prop='amount', label='amount', width='230')
     el-tab-pane(label='History')
-      el-table(:data="history", style='width: 100%')
-        el-table-column(prop='block_time', label='Date', width='230')
-        el-table-column(prop='action_trace.act.account', label='Token account', width='180')
-        el-table-column(prop='action_trace.act.authorization[0].actor', label='Maker')
-        el-table-column(prop='action_trace.act.name', label='Operation')
+      history
     el-tab-pane(label='Settings')
 
 
@@ -62,6 +64,7 @@ div
 
 <script>
 import NewOrderForm from '~/components/NewOrderForm.vue'
+import History from '~/components/History.vue'
 import config from '~/config/dev.js'
 
 import axios from 'axios'
@@ -81,6 +84,22 @@ const network = ScatterJS.Network.fromJson({
 
 const rpc = new JsonRpc(config.host, { fetch });
 const eos = ScatterJS.eos(network, Api, {rpc, beta3:true})
+
+
+function cancelorder(maker, order_id) {
+  return eos.transact({
+     actions: [{
+         account: config.contract,
+         name: 'cancelorder',
+         authorization: [{
+             actor: maker,
+             permission: 'active',
+         }],
+         data: { maker, order_id },
+     }]
+   }, { blocksBehind: 3, expireSeconds: 3 * 60 }
+  )
+}
 
 // To Utils
 function tranfer(contract, actor, quantity, memo) {
@@ -105,13 +124,13 @@ function tranfer(contract, actor, quantity, memo) {
 
 export default {
   components: {
-    NewOrderForm
+    NewOrderForm,
+    History
   },
 
   data() {
     return {
       orders: [],
-      history: [],
       scatterConnected: false,
 
       to_assets: [],
@@ -135,6 +154,27 @@ export default {
   methods: {
     logout() {
       ScatterJS.logout().then(this.$store.commit('setUser', null));
+    },
+
+    async cancelOrder(order) {
+      if (!this.user) return this.$notify({ title: 'Authorization', message: 'Pleace login first', type: 'info' })
+
+      const loading = this.$loading({
+        lock: true,
+        text: 'Wait for Scatter',
+      });
+
+      try {
+        await cancelorder(order.maker, order.id)
+
+        this.$notify({ title: 'Success', message: `Order canceled ${order.id}`, type: 'success' })
+        this.fetch()
+      } catch (e) {
+        this.$notify({ title: 'Place order', message: e.message, type: 'error' })
+        console.log(e)
+      } finally {
+        loading.close()
+      }
     },
 
     async scatterConnect() {
@@ -178,7 +218,7 @@ export default {
       try {
         await tranfer(buy.contract, this.user.name, buy.quantity, `fill|${id}`)
 
-        this.$notify({ title: 'Success', message: 'This is a success message', type: 'success' })
+        this.$notify({ title: 'Success', message: `You fill ${id} order`, type: 'success' })
         this.fetch()
       } catch (e) {
         this.$notify({ title: 'Place order', message: e.message, type: 'error' })
@@ -213,13 +253,6 @@ export default {
     async fetch() {
       // Orders
       rpc.get_table_rows({code: config.contract, scope: config.contract, table: 'orders'}).then(r => this.orders = r.rows)
-
-      // History
-      rpc.history_get_actions(config.contract).then(r => {
-        this.history = r.actions.filter(h => {
-          return !(['setcode', 'setabi'].includes(h.action_trace.act.name)) && h.action_trace.act.authorization[0].actor != config.contract
-        })
-      })
 
       // User balances
       if (this.user) {
