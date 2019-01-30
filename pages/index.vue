@@ -196,7 +196,7 @@ export default {
       });
 
       try {
-        await tranfer(sell.contract, this.user.name, quantity, `place|${quantity}`)
+        let r = await tranfer(sell.contract, this.user.name, quantity, `place|${sell_quantity}`)
 
         this.$notify({ title: 'Place order', message: r.processed.action_traces[0].inline_traces[1].console, type: 'success' })
         this.fetch()
