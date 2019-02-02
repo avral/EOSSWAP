@@ -2,12 +2,14 @@ const pkg = require('./package')
 
 const isSPA = process.argv.includes('--spa')
 const isDev = process.env.npm_lifecycle_event == 'dev'
+const isMainnet = process.argv.includes('--mainnet')
 
 module.exports = {
   mode: 'spa',
 
   env: {
     isDev,
+    isMainnet,
   },
 
   /*

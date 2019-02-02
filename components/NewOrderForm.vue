@@ -9,7 +9,7 @@ div
       h1.leader Sell
 
       el-form-item(label="Sell token")
-        el-select(v-model="tokenSelect", placeholder='Sell token' @change="sellChange").w-100
+        el-select(v-model="tokenSelect", placeholder='Sell token' @change="sellSellToken").w-100
           el-option(v-for="b in user.balances" :key="b.currency + '@' + b.contract" :label="b.currency + '@' + b.contract",
           :value="b.currency + '@' + b.contract")
 
@@ -20,20 +20,31 @@ div
         hr
 
         h1.leader Buy
+        p {{ form.buy.contract }}
 
-        //el-form-item(v-if="form.sell.amount" label="Token contract" prop="buyContract")
-        el-form-item(label="Token contract" prop="buy.contract")
-          el-input(placeholder="eosio.token betdicetoken ridlridlcoin eosiomeetone etc.." v-model="form.buy.contract")
+        el-tabs
+          el-tab-pane(label="Auto select")
+            el-select(v-model='sellSelect', filterable placeholder='Select' clearable @change="setBuyToken").w-100
+              el-option(
+                v-for="t in tokens",
+                :key="t.symbol + '@' + t.contract",
+                :label="t.symbol + '@' + t.contract",
+                :value="t.symbol + '@' + t.contract"
+              )
 
-        el-form-item(v-if="form.buy.contract" label="Token symbol" prop="buy.symbol")
-          // TODO Uppercase
-          el-input(placeholder="DICE TRYBE CAT EOS etc.." v-model="form.buy.symbol").upperinput
+          el-tab-pane(label="Manually")
+            el-form-item(label="Token contract" prop="buy.contract")
+              el-input(placeholder="eosio.token betdicetoken ridlridlcoin eosiomeetone etc.." v-model="form.buy.contract")
+
+            el-form-item(v-if="form.buy.contract" label="Token symbol" prop="buy.symbol")
+              // TODO Uppercase
+              el-input(placeholder="DICE TRYBE CAT EOS etc.." v-model="form.buy.symbol").upperinput
 
         el-form-item(v-if="form.buy.symbol" label="Token amount")
           el-input(placeholder="0.0001"  v-model="form.buy.amount" type="number" @change="parseAmounts").mt-2
 
         span.dialog-footer
-          el-button(type='primary', @click="submit").mt-3.w-100 Create order
+          el-button(type='primary' v-if="form.buy.amount != 'NaN'" @click="submit").mt-3.w-100 Create order
 </template>
 
 <script>
@@ -49,21 +60,19 @@ export default {
     return {
       visible: false,
 
-      knownTokenAccounts: [
-        'eosio.token',
-        'fake'
-      ],
+      tokens: [],
+      sellSelect: '',
 
       form: {
         sell: {
           symbol: '',
-          amount: 0,
+          amount: null,
           contract: '',
         },
 
         buy: {
           symbol: '',
-          amount: 0,
+          amount: null,
           contract: '',
         }
       },
@@ -104,10 +113,20 @@ export default {
   },
 
   created() {
-    //this.knownTokenAccounts.map(a => rpc.get_currency_balance()
+    this.fetchTokens()
   },
 
   methods: {
+    sellSellToken(a) {
+      this.form.sell.symbol = a.split('@')[0]
+      this.form.sell.contract = a.split('@')[1]
+    },
+
+    setBuyToken(a) {
+      this.form.buy.symbol = a.split('@')[0]
+      this.form.buy.contract = a.split('@')[1]
+    },
+
     open() {
       if (this.user)
         this.visible = true
@@ -115,9 +134,21 @@ export default {
         this.$notify({ title: 'Login', message: 'Pleace login first', type: 'info' })
     },
 
-    sellChange(a) {
-      this.form.sell.symbol = a.split('@')[0]
-      this.form.sell.contract = a.split('@')[1]
+    fetchTokens() {
+      // TODO Refactor, bar code here
+      let efSocket = new WebSocket('wss://api-v1.eosflare.io/socket.io/?EIO=3&transport=websocket')
+
+      efSocket.addEventListener('open', event => {
+        efSocket.addEventListener('message', event => {
+          let code = event.data.substr(0, 2)
+
+          if (code == 42) {
+            this.tokens = JSON.parse(JSON.parse(event.data.substr(2))[1]).tokens
+          }
+        })
+
+        efSocket.send('42["message", {"_url":"/chain/get_tokens","_method":"POST","_headers":{"content-type":"application/json"},"page":0,"limit":500,"lang":"en-US"}]')
+      })
     },
 
     parseAmounts() {

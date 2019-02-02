@@ -21,5 +21,4 @@ const eos_mainet = {
 
 }
 
-export default process.env.isDev ? jungle : eos_mainet
-//export default process.env.isDev ? local : jungle
+export default process.env.isMainnet ? eos_mainet : jungle
