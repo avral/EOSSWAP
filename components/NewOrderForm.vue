@@ -20,7 +20,6 @@ div
         hr
 
         h1.leader Buy
-        p {{ form.buy.contract }}
 
         el-tabs
           el-tab-pane(label="Auto select")
