@@ -1,7 +1,7 @@
 <template lang="pug">
 // TODO App need decomposition
 div
-  .display-4 Orderbook: eosio.token exchanger
+  .display-4 EOS.Swap: token exchanger
   el-alert(title="Scatter in not connected:" :closable="false"  show-icon type="info" v-if="!scatterConnected")
     span.ml-2 Unlock or install  
     a(href="https://get-scatter.com/" target="_blank") Scatter
