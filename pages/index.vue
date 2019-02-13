@@ -47,9 +47,9 @@ div
       el-alert(v-if="!user" title="Pleace login" :closable="false" show-icon type="info")
 
       el-table(v-else :data="user.balances", style='width: 100%')
-        el-table-column(prop='contract', label='contract', width='230')
-        el-table-column(prop='currency', label='currency', width='230')
-        el-table-column(prop='amount', label='amount', width='230')
+        el-table-column(prop='contract', label='contract')
+        el-table-column(prop='currency', label='currency')
+        el-table-column(prop='amount', label='amount')
     el-tab-pane(label='History')
       history
     el-tab-pane(label='Settings')
@@ -185,14 +185,8 @@ export default {
     },
 
     async fetch() {
+      // TODO Подгрузка с прокруткой
       this.rpc.get_table_rows({code: config.contract, scope: config.contract, table: 'orders'}).then(r => this.orders = r.rows)
-
-      // User balances
-      //if (this.user) {
-      //  axios.get(`https://lightapi.eosgeneva.io/api/account/jungle/${this.user.name}`).then(r => {
-      //    this.$store.commit('setUser', { ...this.user, balances: r.data.balances })
-      //  })
-      //}
     },
   }
 }
