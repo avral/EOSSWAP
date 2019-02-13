@@ -47,7 +47,7 @@ div
 </template>
 
 <script>
-import config from '~/config/dev.js'
+import config from '~/config'
 import { JsonRpc } from 'eosjs'
 
 const rpc = new JsonRpc(config.host, { fetch });

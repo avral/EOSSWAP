@@ -8,7 +8,7 @@ el-table(:data="history", row-key="block_num'" style='width: 100%')
 </template>
 
 <script>
-import config from '~/config/dev.js'
+import config from '~/config'
 import { JsonRpc } from 'eosjs'
 
 import { mapGetters } from 'vuex'

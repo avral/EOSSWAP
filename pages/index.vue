@@ -1,7 +1,6 @@
 <template lang="pug">
 // TODO App need decomposition
 div
-  .display-4 EOS.Swap: token exchanger
   el-alert(title="Scatter in not connected:" :closable="false"  show-icon type="info" v-if="!scatterConnected")
     span.ml-2 Unlock or install  
     a(href="https://get-scatter.com/" target="_blank") Scatter
@@ -26,7 +25,7 @@ div
             el-table-column(label="ID" width="50")
               template(slot-scope='scope')
                 //i.el-icon-time
-                span(style='margin-left: 10px') {{ scope.row.id }}
+                a(style='margin-left: 10px' href="#") {{ scope.row.id }}
 
             el-table-column(label="Owner" width="120")
               template(slot-scope="scope")
@@ -65,62 +64,11 @@ div
 <script>
 import NewOrderForm from '~/components/NewOrderForm.vue'
 import History from '~/components/History.vue'
-import config from '~/config/dev.js'
 
 import axios from 'axios'
-import ScatterJS from 'scatterjs-core'
-import ScatterEOS from 'scatterjs-plugin-eosjs2'
-import { Api, JsonRpc, RpcError } from 'eosjs'
 
 import { mapGetters } from 'vuex'
 
-
-ScatterJS.plugins(new ScatterEOS())
-
-const network = ScatterJS.Network.fromJson({
-      blockchain: 'eos',
-      ...config
-});
-
-const rpc = new JsonRpc(config.host, { fetch });
-const eos = ScatterJS.eos(network, Api, {rpc, beta3:true})
-
-
-function cancelorder(maker, order_id) {
-  return eos.transact({
-     actions: [{
-         account: config.contract,
-         name: 'cancelorder',
-         authorization: [{
-             actor: maker,
-             permission: 'active',
-         }],
-         data: { maker, order_id },
-     }]
-   }, { blocksBehind: 3, expireSeconds: 3 * 60 }
-  )
-}
-
-// To Utils
-function tranfer(contract, actor, quantity, memo) {
-  return eos.transact({
-     actions: [{
-         account: contract,
-         name: 'transfer',
-         authorization: [{
-             actor: actor, // FIXME Here should be current user
-             permission: 'active',
-         }],
-         data: {
-             from: actor,
-             to: config.contract, // contract name from config
-             quantity,
-             memo,
-         },
-     }]
-   }, { blocksBehind: 3, expireSeconds: 3 * 60 }
-  )
-}
 
 export default {
   components: {
@@ -252,7 +200,7 @@ export default {
 
     async fetch() {
       // Orders
-      rpc.get_table_rows({code: config.contract, scope: config.contract, table: 'orders'}).then(r => this.orders = r.rows)
+      //rpc.get_table_rows({code: config.contract, scope: config.contract, table: 'orders'}).then(r => this.orders = r.rows)
 
       // User balances
       if (this.user) {

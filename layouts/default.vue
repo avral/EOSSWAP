@@ -1,7 +1,12 @@
 <template lang="pug">
 .container
+
   .row
     .col-lg-9.m-auto
+      .display-4
+        nuxt-link(tag="span" :to="{name: 'index'}" style="cursor: pointer;") EOS Swap: 
+        | token exchanger
+
       nuxt
 
   footer
