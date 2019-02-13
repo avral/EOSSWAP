@@ -5,6 +5,7 @@ const local = {
   host: 'http://localhost:8888',
   port: 8888,
   protocol: 'http',
+  monitor: 'https://jungle.eosx.io',
 }
 
 const jungle = {
@@ -14,12 +15,13 @@ const jungle = {
   host: 'https://api.jungle.alohaeos.com',
   port: 443,
   protocol: 'https',
+  monitor: 'https://jungle.eosx.io',
 }
 
 const eos_mainet = {
   // TODO Implement mainet
 
+  monitor: 'https://eosx.io',
 }
 
-//export default process.env.isMainnet ? eos_mainet : jungle
-export default process.env.isMainnet ? eos_mainet : local
+export default process.env.isMainnet ? eos_mainet : jungle

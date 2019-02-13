@@ -33,19 +33,19 @@ export default {
 
   methods: {
     fetch() {
-      rpc.history_get_actions(config.contract).then(r => {
-        this.history = r.actions.filter(h => {
-          h.block_time = h.block_time.substr(0, 16).replace('T', ' ')
-          
-          if (h.action_trace.act.name == "transfer" && h.action_trace.act.data.from != config.contract)
-            return true
+      //rpc.history_get_actions(config.contract).then(r => {
+      //  this.history = r.actions.filter(h => {
+      //    h.block_time = h.block_time.substr(0, 16).replace('T', ' ')
+      //    
+      //    if (h.action_trace.act.name == "transfer" && h.action_trace.act.data.from != config.contract)
+      //      return true
 
-          if (h.action_trace.act.account != config.contract)
-            return false
+      //    if (h.action_trace.act.account != config.contract)
+      //      return false
 
-          return true
-        })
-      })
+      //    return true
+      //  })
+      //})
     }
   }
 }

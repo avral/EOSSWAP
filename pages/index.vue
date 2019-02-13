@@ -1,11 +1,6 @@
 <template lang="pug">
 // TODO App need decomposition
 div
-  el-alert(title="Scatter in not connected:" :closable="false"  show-icon type="info" v-if="!scatterConnected")
-    span.ml-2 Unlock or install  
-    a(href="https://get-scatter.com/" target="_blank") Scatter
-    i(@click="scatterConnect" size="mini").el-alert__closebtn Update
-
   el-tabs(type='border-card').mt-4
     el-tab-pane(label="Orders")
       .row
@@ -25,7 +20,7 @@ div
             el-table-column(label="ID" width="50")
               template(slot-scope='scope')
                 //i.el-icon-time
-                a(style='margin-left: 10px' href="#") {{ scope.row.id }}
+                nuxt-link(:to="{name: 'order-id', params: {id: scope.row.id }}" style='margin-left: 10px') {{ scope.row.id }}
 
             el-table-column(label="Owner" width="120")
               template(slot-scope="scope")
@@ -37,15 +32,16 @@ div
                 span Sell: {{ scope.row.sell.quantity }}@{{ scope.row.sell.contract }}
                 |  for: {{ scope.row.buy.quantity }}@{{ scope.row.buy.contract }}
 
-            el-table-column(label='Operations' width="100" v-if="user")
+            el-table-column(label='' width="100")
               template(slot-scope='scope')
-                el-button(
-                  v-if="scope.row.maker == user.name"
-                  size='mini',
-                  type="warning"
-                  @click="cancelOrder(scope.row)"
-                ) Cancel
-                el-button(v-else size='mini', type="success" @click="buy(scope.row)") Buy
+                //el-button(
+                //  v-if="scope.row.maker == user.name"
+                //  size='mini',
+                //  type="warning"
+                //  @click="cancelOrder(scope.row)"
+                //) Cancel
+                //el-button(v-else size='mini', type="success" @click="buy(scope.row)") Buy
+                el-button(@click="$router.push({name: 'order-id', params: {id: scope.row.id }})" size='mini') Show
 
     el-tab-pane(label='My balances')
       el-alert(v-if="!user" title="Pleace login" :closable="false" show-icon type="info")
@@ -67,6 +63,7 @@ import History from '~/components/History.vue'
 
 import axios from 'axios'
 
+import config from '~/config'
 import { mapGetters } from 'vuex'
 
 
@@ -79,7 +76,6 @@ export default {
   data() {
     return {
       orders: [],
-      scatterConnected: false,
 
       to_assets: [],
 
@@ -91,17 +87,17 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['user'])
+    ...mapGetters(['user']),
+    ...mapGetters('chain', ['rpc'])
   },
 
   created() {
     this.fetch()
-    this.scatterConnect()
   },
 
   methods: {
     logout() {
-      ScatterJS.logout().then(this.$store.commit('setUser', null));
+      this.$store.dispatch('chain/logout')
     },
 
     async cancelOrder(order) {
@@ -125,25 +121,15 @@ export default {
       }
     },
 
-    async scatterConnect() {
-      try {
-        this.scatterConnected = await ScatterJS.connect('Ordersbook', { network })
-      } catch(e) {
-        this.$notify({ title: 'Scatter error', message: e.message, type: 'error' })
-      }
-    },
-
     async login() {
-      if(this.scatterConnected) {
+      if(this.$store.state.chain.scatterConnected) {
         const loading = this.$loading({
           lock: true,
           text: 'Wait for Scatter',
         });
 
         try {
-          let r = await ScatterJS.login()
-
-          this.$store.commit('setUser', r.accounts[0])
+          await this.$store.dispatch('chain/login')
         } catch(e) {
           this.$notify({ title: 'Scatter login error', message: e.message, type: 'error' })
         } finally {
@@ -199,15 +185,14 @@ export default {
     },
 
     async fetch() {
-      // Orders
-      //rpc.get_table_rows({code: config.contract, scope: config.contract, table: 'orders'}).then(r => this.orders = r.rows)
+      this.rpc.get_table_rows({code: config.contract, scope: config.contract, table: 'orders'}).then(r => this.orders = r.rows)
 
       // User balances
-      if (this.user) {
-        axios.get(`https://lightapi.eosgeneva.io/api/account/jungle/${this.user.name}`).then(r => {
-          this.$store.commit('setUser', { ...this.user, balances: r.data.balances })
-        })
-      }
+      //if (this.user) {
+      //  axios.get(`https://lightapi.eosgeneva.io/api/account/jungle/${this.user.name}`).then(r => {
+      //    this.$store.commit('setUser', { ...this.user, balances: r.data.balances })
+      //  })
+      //}
     },
   }
 }

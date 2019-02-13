@@ -44,6 +44,7 @@ module.exports = {
   */
   plugins: [
   '@/plugins/element-ui',
+  '@/plugins/filters',
 
   {ssr: false, src: '~/plugins/startapp.js'},
 ],
