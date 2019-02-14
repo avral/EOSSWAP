@@ -6,7 +6,7 @@ import { Api, JsonRpc, RpcError } from 'eosjs'
 
 ScatterJS.plugins(new ScatterEOS())
 
-const network = ScatterJS.Network.fromJson({
+export const network = ScatterJS.Network.fromJson({
       blockchain: 'eos',
       ...config
 });
@@ -21,10 +21,12 @@ export const state = () => ({
 })
 
 export const actions = {
-  async init({ commit, dispatch }) {
+  async init({ state, commit, dispatch }) {
     console.log('App starting..')
 
-    ScatterJS.connect('Ordersbook', { network }).then(v => commit('setScatterConnected', v))
+    await ScatterJS.connect('Ordersbook', { network }).then(v => commit('setScatterConnected', v))
+    if (state.scatterConnected)
+      dispatch('login')
   },
 
   logout({ commit }) {
@@ -54,7 +56,8 @@ export const mutations = {
 
 export const getters = {
   rpc: state => rpc,
-  eos: state => eos
+  eos: state => eos,
+  scatter: state => ScatterJS.scatter
 }
 
 export function transfer(contract, actor, quantity, memo) {

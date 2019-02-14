@@ -1,4 +1,5 @@
 const local = {
+  name: 'jungle',
   contract: 'ordersbook',
 
   chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
@@ -9,6 +10,7 @@ const local = {
 }
 
 const jungle = {
+  name: 'jungle',
   contract: 'avralsjungle',
 
   chainId: 'e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473',
@@ -19,6 +21,7 @@ const jungle = {
 }
 
 const eos_mainet = {
+  name: 'eos',
   // TODO Implement mainet
 
   monitor: 'https://eosx.io',

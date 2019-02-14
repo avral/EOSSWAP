@@ -48,9 +48,6 @@ div
 
 <script>
 import config from '~/config'
-import { JsonRpc } from 'eosjs'
-
-const rpc = new JsonRpc(config.host, { fetch });
 
 import { mapGetters } from 'vuex'
 
@@ -81,7 +78,7 @@ export default {
           trigger: 'blur',
           validator: async (rule, value, callback) => {
             try {
-              await rpc.get_account(value)
+              await this.rpc.get_account(value)
               callback()
             } catch (e) {
               callback(new Error('Account not exists'))
@@ -92,7 +89,7 @@ export default {
         "buy.symbol": {
           trigger: 'blur',
           validator: async (rule, value, callback) => {
-            let r = await rpc.get_currency_stats(this.form.buy.contract, value)
+            let r = await this.rpc.get_currency_stats(this.form.buy.contract, value)
 
             if (value in r)
               callback()
@@ -108,7 +105,8 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['user'])
+    ...mapGetters(['user']),
+    ...mapGetters('chain', ['rpc'])
   },
 
   created() {

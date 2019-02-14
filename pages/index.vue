@@ -52,8 +52,6 @@ div
         el-table-column(prop='amount', label='amount')
     el-tab-pane(label='History')
       history
-    el-tab-pane(label='Settings')
-
 
 </template>
 
@@ -65,6 +63,7 @@ import axios from 'axios'
 
 import config from '~/config'
 import { mapGetters } from 'vuex'
+import { transfer } from '~/store/chain.js'
 
 
 export default {
@@ -98,27 +97,6 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('chain/logout')
-    },
-
-    async cancelOrder(order) {
-      if (!this.user) return this.$notify({ title: 'Authorization', message: 'Pleace login first', type: 'info' })
-
-      const loading = this.$loading({
-        lock: true,
-        text: 'Wait for Scatter',
-      });
-
-      try {
-        await cancelorder(order.maker, order.id)
-
-        this.$notify({ title: 'Success', message: `Order canceled ${order.id}`, type: 'success' })
-        this.fetch()
-      } catch (e) {
-        this.$notify({ title: 'Place order', message: e.message, type: 'error' })
-        console.log(e)
-      } finally {
-        loading.close()
-      }
     },
 
     async login() {
@@ -172,7 +150,7 @@ export default {
       });
 
       try {
-        let r = await tranfer(sell.contract, this.user.name, quantity, `place|${sell_quantity}`)
+        let r = await transfer(sell.contract, this.user.name, quantity, `place|${sell_quantity}`)
 
         this.$notify({ title: 'Place order', message: r.processed.action_traces[0].inline_traces[1].console, type: 'success' })
         this.fetch()

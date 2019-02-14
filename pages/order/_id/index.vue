@@ -17,7 +17,8 @@ el-card(v-if="!no_found").box-card.mt-3
           a(:href="order.buy.contract | monitorAccount" target="_blank") {{ order.buy.contract }}
     hr 
 
-    el-button(type="primary" @click="buy").w-100 Buy  
+    el-button(v-if="user && order.maker == user.name" type="warning" @click="cancelOrder").w-100 Cancel order
+    el-button(v-else type="primary" @click="buy").w-100 Buy  
       |  {{ order.sell.quantity }}@{{ order.sell.contract }}
 
 
@@ -32,9 +33,10 @@ el-card(v-else).box-card.mt-3
 
 <script>
 import { mapGetters } from 'vuex'
+import ScatterJS from 'scatterjs-core'
 
 import config from '~/config'
-import { transfer } from '~/store/chain.js'
+import { transfer, cancelorder } from '~/store/chain.js'
 
 
 export default {
@@ -48,15 +50,59 @@ export default {
   },
 
   computed: {
-    ...mapGetters('chain', ['rpc']),
+    ...mapGetters('chain', ['rpc', 'scatter']),
     ...mapGetters(['user'])
   },
 
+  //watch: {
+  //  '$store.state.chain.scatterConnected'() {
+  //    console.log(11111)
+  //  }
+  //},
+
   async created() {
     this.fetchOrder()
+    //try {
+    //  await ScatterJS.connect()
+    //} catch(e) {
+    //  this.scatter.checkLogin().then(r => {
+    //    if (!r) // if not ligined
+    //      console.log(r)
+    //      //this.$store.dispatch('chain/login')
+    //  })
+    //}
+
+
+    //this.scatter.checkLogin().then(r => {
+    //  if (!r) // if not ligined
+    //    this.$store.dispatch('chain/login')
+    //})
   },
 
   methods: {
+    async cancelOrder(order) {
+      if (!this.user) return this.$notify({ title: 'Authorization', message: 'Pleace login first', type: 'info' })
+
+      const loading = this.$loading({
+        lock: true,
+        text: 'Wait for Scatter',
+      });
+
+      try {
+        let order = this.order;
+
+        await cancelorder(order.maker, order.id)
+
+        this.$notify({ title: 'Success', message: `Order canceled ${order.id}`, type: 'success' })
+        this.$router.push({ name: 'index' })
+      } catch (e) {
+        this.$notify({ title: 'Place order', message: e.message, type: 'error' })
+        console.log(e)
+      } finally {
+        loading.close()
+      }
+    },
+
     fetchOrder() {
       this.rpc.get_table_rows({
         code: config.contract,

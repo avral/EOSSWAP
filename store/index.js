@@ -1,3 +1,4 @@
+import config from '~/config'
 import axios from 'axios'
 
 
@@ -14,7 +15,7 @@ export const actions = {
   loadUserBalances({ rootState, state, commit }) {
     if (state.user) {
       // TODO Вынести этот эндпоинт в конфиг
-      axios.get(`https://lightapi.eosgeneva.io/api/account/jungle/${rootState.user.name}`).then(r => {
+      axios.get(`https://lightapi.eosgeneva.io/api/account/${config.name}/${rootState.user.name}`).then(r => {
         commit('setUser', { ...state.user, balances: r.data.balances }, { root: true })
       })
     }

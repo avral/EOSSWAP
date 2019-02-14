@@ -1,20 +1,18 @@
 <template lang="pug">
 //el-table(:data="history", :prop="{prop: 'block_num', order: 'ascending'}" style='width: 100%')
 el-table(:data="history", row-key="block_num'" style='width: 100%')
-    el-table-column(prop='block_time', label='Date', width='230')
-    el-table-column(prop='action_trace.act.account', label='Token account', width='180')
-    el-table-column(prop='action_trace.act.authorization[0].actor', label='Maker')
-    el-table-column(prop='action_trace.act.name', label='Operation')
+    el-table-column(prop='maker', label='Seller', width='100')
+    el-table-column(prop='buyer', label='Buyer', width='100')
+    el-table-column(prop='sell', label='Sell', width='200')
+    el-table-column(prop='buy', label='Buy', width='200')
+
+    el-table-column(prop='time', label='Time', width='230')
 </template>
 
 <script>
 import config from '~/config'
-import { JsonRpc } from 'eosjs'
 
 import { mapGetters } from 'vuex'
-
-// Have history plugin
-const rpc = new JsonRpc(process.env.isDev ? 'https://junglehistory.cryptolions.io' : config.host, { fetch });
 
 export default {
   data() {
@@ -24,7 +22,8 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['user'])
+    ...mapGetters(['user']),
+    ...mapGetters('chain', ['rpc'])
   },
 
   created() {
@@ -33,19 +32,22 @@ export default {
 
   methods: {
     fetch() {
-      //rpc.history_get_actions(config.contract).then(r => {
-      //  this.history = r.actions.filter(h => {
-      //    h.block_time = h.block_time.substr(0, 16).replace('T', ' ')
-      //    
-      //    if (h.action_trace.act.name == "transfer" && h.action_trace.act.data.from != config.contract)
-      //      return true
 
-      //    if (h.action_trace.act.account != config.contract)
-      //      return false
+      this.rpc.get_table_rows({
+        code: config.contract,
+        scope: config.contract,
+        table: 'results',
+        limit: 100
+      }).then(r => {
+        this.history = r.rows.map(h => {
+          h.time = new Date(h.time * 1000).toLocaleString();
 
-      //    return true
-      //  })
-      //})
+          h.sell = h.sell.quantity + '@' + h.sell.contract;
+          h.buy = h.buy.quantity + '@' + h.buy.contract;
+
+          return h
+        })
+      })
     }
   }
 }
