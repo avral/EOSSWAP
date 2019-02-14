@@ -25,12 +25,13 @@ export const actions = {
     console.log('App starting..')
 
     await ScatterJS.connect('Ordersbook', { network }).then(v => commit('setScatterConnected', v))
-    if (state.scatterConnected)
-      dispatch('login')
+    //if (state.scatterConnected)
+    //  dispatch('login')
   },
 
-  logout({ commit }) {
-    ScatterJS.logout().then(commit('setUser', null, { root: true }));
+  async logout({ commit }) {
+    await ScatterJS.logout()
+    commit('setUser', null, { root: true })
   },
 
   async login({ state, commit, dispatch }) {

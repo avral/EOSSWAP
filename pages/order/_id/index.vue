@@ -1,6 +1,6 @@
 <template lang="pug">
 
-el-card(v-if="!no_found").box-card.mt-3
+el-card(v-if="!no_found" v-loading="loading").box-card.mt-3
   .clearfix(slot='header')
     span Order {{ id }} created by  
      a(:href="order.maker | monitorAccount" target="_blank") {{ order.maker }}
@@ -17,9 +17,12 @@ el-card(v-if="!no_found").box-card.mt-3
           a(:href="order.buy.contract | monitorAccount" target="_blank") {{ order.buy.contract }}
     hr 
 
-    el-button(v-if="user && order.maker == user.name" type="warning" @click="cancelOrder").w-100 Cancel order
-    el-button(v-else type="primary" @click="buy").w-100 Buy  
-      |  {{ order.sell.quantity }}@{{ order.sell.contract }}
+    div(v-if="user")
+      el-button(v-if="user && order.maker == user.name" type="warning" @click="cancelOrder").w-100 Cancel order
+      el-button(v-else type="primary" @click="buy").w-100 Buy  
+        |  {{ order.sell.quantity }}@{{ order.sell.contract }}
+    div(v-else)
+      el-button(@click="login()").w-100 Pleace login
 
 
 el-card(v-else).box-card.mt-3
@@ -46,6 +49,7 @@ export default {
 
       order: {},
       no_found: false,
+      loading: true
     }
   },
 
@@ -54,32 +58,23 @@ export default {
     ...mapGetters(['user'])
   },
 
-  //watch: {
-  //  '$store.state.chain.scatterConnected'() {
-  //    console.log(11111)
-  //  }
-  //},
-
   async created() {
     this.fetchOrder()
-    //try {
-    //  await ScatterJS.connect()
-    //} catch(e) {
-    //  this.scatter.checkLogin().then(r => {
-    //    if (!r) // if not ligined
-    //      console.log(r)
-    //      //this.$store.dispatch('chain/login')
-    //  })
-    //}
-
-
-    //this.scatter.checkLogin().then(r => {
-    //  if (!r) // if not ligined
-    //    this.$store.dispatch('chain/login')
-    //})
   },
 
   methods: {
+    async login() {
+      this.loading = true
+
+      try {
+        await this.$store.dispatch('chain/login')
+      } catch (e) {
+        this.$notify({ title: 'Loading error', message: e.message, type: 'error' })
+      } finally {
+        this.loading = false
+      }
+    },
+
     async cancelOrder(order) {
       if (!this.user) return this.$notify({ title: 'Authorization', message: 'Pleace login first', type: 'info' })
 
@@ -103,14 +98,16 @@ export default {
       }
     },
 
-    fetchOrder() {
-      this.rpc.get_table_rows({
-        code: config.contract,
-        scope: config.contract,
-        table: 'orders',
-        lower_bound: this.id,
-        limit: 1
-      }).then(r => {
+    async fetchOrder() {
+      try {
+        let r = await this.rpc.get_table_rows({
+          code: config.contract,
+          scope: config.contract,
+          table: 'orders',
+          lower_bound: this.id,
+          limit: 1
+        })
+
         let order = r.rows[0]
 
         if (order && order.id == this.id) {
@@ -118,7 +115,12 @@ export default {
         } else {
           this.no_found = true
         }
-      })
+
+      } catch (e) {
+        this.$notify({ title: 'Error fetching order', message: e.message, type: 'error' })
+      } finally {
+        this.loading = false
+      }
     },
 
     async buy() {
