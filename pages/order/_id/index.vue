@@ -140,10 +140,16 @@ export default {
 
       try {
         let { buy, sell, id } = this.order
-        await transfer(buy.contract, this.user.name, buy.quantity, `fill|${id}`)
+        let r = await transfer(buy.contract, this.user.name, buy.quantity, `fill|${id}`)
 
-        this.$notify({ title: 'Success', message: `You fill ${id} order`, type: 'success' })
-        this.$router.push({ name: 'index' })
+        this.$alert(`<a href="${config.monitor}/tx/${r.transaction_id}" target="_blank">Transaction id</a>`, 'Transaction complete!', {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: 'OK',
+          callback: action => {
+            this.$router.push({ name: 'index' })
+            this.$notify({ title: 'Success', message: `You fill ${id} order`, type: 'success' })
+          }
+        });
       } catch (e) {
         this.$notify({ title: 'Place order', message: e.message, type: 'error' })
         console.log(e)
