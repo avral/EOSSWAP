@@ -14,7 +14,7 @@ div
           :value="b.currency + '@' + b.contract")
 
       el-form-item(v-if="tokenSelect" label="Token amount")
-        el-input(placeholder="0.0001" v-model="form.sell.amount" type="number" step="0.0001" @change="parseAmounts")
+        el-input-number(v-model="form.sell.amount" :precision="4" :step="1").mt-2.w-100
 
       div(v-if="form.sell.amount")
         hr
@@ -40,7 +40,8 @@ div
               el-input(placeholder="DICE TRYBE CAT EOS etc.." v-model="form.buy.symbol").upperinput
 
         el-form-item(v-if="form.buy.symbol" label="Token amount")
-          el-input(placeholder="0.0001"  v-model="form.buy.amount" type="number" @change="parseAmounts").mt-2
+          // TODO Сделать max
+          el-input-number(v-model="form.buy.amount" :precision="4" :step="1").mt-2.w-100
 
         span.dialog-footer
           el-button(type='primary' v-if="form.buy.amount != 'NaN'" @click="submit").mt-3.w-100 Create order
@@ -62,13 +63,13 @@ export default {
       form: {
         sell: {
           symbol: '',
-          amount: null,
+          amount: Number,
           contract: '',
         },
 
         buy: {
           symbol: '',
-          amount: null,
+          amount: Number,
           contract: '',
         }
       },
@@ -148,20 +149,13 @@ export default {
       })
     },
 
-    parseAmounts() {
-      this.form.sell.amount = parseFloat(this.form.sell.amount).toFixed(4)
-      this.form.buy.amount = parseFloat(this.form.buy.amount).toFixed(4)
-    },
-
     submit() {
-      // TODO Проверки/валидация
-
       let form = this.form
 
       let { buy, sell } = form
 
-      let quantity = `${sell.amount} ${sell.symbol}`
-      let sell_quantity = `${buy.amount} ${buy.symbol}@${buy.contract}`
+      let quantity = `${sell.amount.toFixed(4)} ${sell.symbol}`
+      let sell_quantity = `${buy.amount.toFixed(4)} ${buy.symbol}@${buy.contract}`
 
       this.$confirm(`Are you sure to sell ${quantity}@${sell.contract} for ${sell_quantity}`, 'Sell', {
         confirmButtonText: 'Sell',

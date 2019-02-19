@@ -156,8 +156,8 @@ export default {
     },
 
     async newOrder({ buy, sell }) {
-      let quantity = `${sell.amount} ${sell.symbol}`
-      let sell_quantity = `${buy.amount} ${buy.symbol}@${buy.contract}`
+      let quantity = `${sell.amount.toFixed(4)} ${sell.symbol}`
+      let sell_quantity = `${buy.amount.toFixed(4)} ${buy.symbol}@${buy.contract}`
 
       const loading = this.$loading({
         lock: true,
