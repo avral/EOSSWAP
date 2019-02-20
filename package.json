@@ -1,7 +1,7 @@
 {
-  "name": "ordersbook-ui",
+  "name": "EOSSWAP",
   "version": "1.0.0",
-  "description": "Exchange for eosio.token&#39;s",
+  "description": "Exchange for eosio tokens",
   "author": "avral",
   "private": true,
   "scripts": {
