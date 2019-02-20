@@ -22,8 +22,13 @@ const jungle = {
 
 const eos_mainet = {
   name: 'eos',
-  // TODO Implement mainet
+  contract: 'avralsjungle',
 
+  chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
+
+  host: 'https://node.eosflare.io',
+  port: 443,
+  protocol: 'https',
   monitor: 'https://eosx.io',
 }
 
