@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "nuxt",
+    "devmainnet": "nuxt --mainnet",
     "build": "nuxt build",
     "build-mainnet": "nuxt build --mainnet",
     "start": "nuxt start",

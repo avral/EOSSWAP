@@ -7,6 +7,7 @@ const local = {
   port: 8888,
   protocol: 'http',
   monitor: 'https://jungle.eosx.io',
+  lightapi: 'https://lightapi.eosgeneva.io',
 }
 
 const jungle = {
@@ -18,6 +19,7 @@ const jungle = {
   port: 443,
   protocol: 'https',
   monitor: 'https://jungle.eosx.io',
+  lightapi: 'https://lightapi.eosgeneva.io',
 }
 
 const eos_mainet = {
@@ -26,10 +28,11 @@ const eos_mainet = {
 
   chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
 
-  host: 'https://node.eosflare.io',
+  host: 'https://api.eosnewyork.io',
   port: 443,
   protocol: 'https',
   monitor: 'https://eosx.io',
+  lightapi: 'https://api.light.xeos.me',
 }
 
 export default process.env.isMainnet ? eos_mainet : jungle
