@@ -28,7 +28,7 @@ const eos_mainet = {
 
   chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
 
-  host: 'https://api.eosnewyork.io',
+  host: 'https://api.main.alohaeos.com:443',
   port: 443,
   protocol: 'https',
   monitor: 'https://eosx.io',

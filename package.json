@@ -8,7 +8,7 @@
     "dev": "nuxt",
     "devmainnet": "nuxt --mainnet",
     "build": "nuxt build",
-    "build-mainnet": "nuxt build --mainnet",
+    "build-mainnet": "nuxt build --spa --mainnet",
     "start": "nuxt start",
     "generate": "nuxt generate",
     "lint": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",

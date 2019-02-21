@@ -38,10 +38,10 @@ export default {
 
   async created() {
     try {
-      let r = await axios.get(config.host + '/v1/chain/get_info')
+      await this.$store.getters['chain/rpc'].get_info()
     } catch(e) {
       this.netError = true
-      console.log('Net error')
+      console.log('Net error', e)
     }
   },
 

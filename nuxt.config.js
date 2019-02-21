@@ -7,6 +7,8 @@ const isMainnet = process.argv.includes('--mainnet')
 module.exports = {
   mode: 'spa',
 
+  //buildDir: isMainnet ? 'mainnet-dist' : 'dist',
+
   env: {
     isDev,
     isMainnet,
