@@ -9,7 +9,7 @@ div
       h1.leader Sell
 
       el-form-item(label="Sell token")
-        el-select(v-model="tokenSelect", placeholder='Sell token' @change="sellSellToken").w-100
+        el-select(v-model="tokenSelect", filterable clearable placeholder='Sell token' @change="sellSellToken").w-100
           el-option(v-for="b in user.balances" :key="b.currency + '@' + b.contract" :label="b.currency + '@' + b.contract",
           :value="b.currency + '@' + b.contract")
 
@@ -23,7 +23,10 @@ div
 
         el-tabs
           el-tab-pane(label="Auto select")
-            el-select(v-model='sellSelect', filterable placeholder='Select' clearable @change="setBuyToken").w-100
+            el-select(v-model='sellSelect',
+              filterable placeholder='Select' clearable @change="setBuyToken").w-100
+              el-option(label="EOS@eosio.token", value="EOS@eosio.token")
+
               el-option(
                 v-for="t in tokens",
                 :key="t.symbol + '@' + t.contract",
@@ -115,6 +118,11 @@ export default {
   },
 
   methods: {
+    filterBySymbol(value) {
+      console.log(this.tokens.slice(0, 2))
+      return this.tokens.slice(0, 2)
+    },
+
     sellSellToken(a) {
       this.form.sell.symbol = a.split('@')[0]
       this.form.sell.contract = a.split('@')[1]
@@ -142,6 +150,14 @@ export default {
 
           if (code == 42) {
             this.tokens = JSON.parse(JSON.parse(event.data.substr(2))[1]).tokens
+
+            this.tokens.sort((a, b) => {
+                if(a.symbol < b.symbol) { return -1; }
+                if(a.symbol > b.symbol) { return 1; }
+
+                return 0;
+            })
+
           }
         })
 

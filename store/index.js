@@ -16,7 +16,15 @@ export const actions = {
     if (state.user) {
       // TODO Вынести этот эндпоинт в конфиг
       axios.get(`${config.lightapi}/api/account/${config.name}/${rootState.user.name}`).then(r => {
-        commit('setUser', { ...state.user, balances: r.data.balances }, { root: true })
+        let balances = r.data.balances
+        balances.sort((a, b) => {
+            if(a.currency < b.currency) { return -1; }
+            if(a.currency > b.currency) { return 1; }
+
+            return 0;
+        })
+
+        commit('setUser', { ...state.user, balances }, { root: true })
       })
     }
   }
