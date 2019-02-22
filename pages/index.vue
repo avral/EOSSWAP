@@ -29,28 +29,30 @@ div
                 .name-wrapper(slot="reference")
                   el-tag(size="medium") {{ scope.row.maker }}
 
-            el-table-column(label="Sell / Buy")
+            el-table-column(label="Sell")
               template(slot-scope="scope")
-                span Sell: {{ scope.row.sell.quantity }}@{{ scope.row.sell.contract }}
-                |  for: {{ scope.row.buy.quantity }}@{{ scope.row.buy.contract }}
+                TokenImage(:src="$tokenLogo(scope.row.sell.quantity.split(' ')[1], scope.row.sell.contract)" height="25")
+                span.ml-2 {{ scope.row.sell.quantity }}@{{ scope.row.sell.contract }}
+
+            el-table-column(label="Buy")
+              template(slot-scope="scope")
+                TokenImage(:src="$tokenLogo(scope.row.buy.quantity.split(' ')[1], scope.row.buy.contract)" height="25")
+                span.ml-2 {{ scope.row.buy.quantity }}@{{ scope.row.buy.contract }}
 
             el-table-column(label='' width="100")
               template(slot-scope='scope')
-                //el-button(
-                //  v-if="scope.row.maker == user.name"
-                //  size='mini',
-                //  type="warning"
-                //  @click="cancelOrder(scope.row)"
-                //) Cancel
-                //el-button(v-else size='mini', type="success" @click="buy(scope.row)") Buy
                 el-button(@click="$router.push({name: 'order-id', params: {id: scope.row.id }})" size='mini') Show
 
     el-tab-pane(label='My balances')
       el-alert(v-if="!user" title="Pleace login" :closable="false" show-icon type="info")
 
       el-table(v-else :data="user.balances", style='width: 100%')
+        el-table-column(label='currency')
+          template(slot-scope="scope")
+            TokenImage(:src="$tokenLogo(scope.row.currency, scope.row.contract)" height="25")
+            span.ml-2 {{ scope.row.currency }}
+
         el-table-column(prop='contract', label='contract')
-        el-table-column(prop='currency', label='currency')
         el-table-column(prop='amount', label='amount')
     el-tab-pane(label='History')
       history
@@ -60,6 +62,7 @@ div
 <script>
 import NewOrderForm from '~/components/NewOrderForm.vue'
 import History from '~/components/History.vue'
+import TokenImage from '~/components/elements/TokenImage'
 
 import axios from 'axios'
 
@@ -71,7 +74,8 @@ import { transfer } from '~/store/chain.js'
 export default {
   components: {
     NewOrderForm,
-    History
+    History,
+    TokenImage
   },
 
   data() {
