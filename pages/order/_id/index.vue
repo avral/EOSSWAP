@@ -9,6 +9,9 @@ el-card(v-if="!no_found" v-loading="loading").box-card.mt-3
   .text.item(v-if="order.maker")
     .d-flex.justify-content-around
       .lead Sell  
+        // TODO Implement token logos for this shit
+        //TokenImage(:src="$tokenLogo(order.sell.quantity.split(' ')[1], order.sell.contract)" height="25").mr-2
+
         b {{ order.sell.quantity }}@
           a(:href="order.sell.contract | monitorAccount" target="_blank") {{ order.sell.contract }}
 
@@ -35,14 +38,20 @@ el-card(v-else).box-card.mt-3
 
 
 <script>
-import { mapGetters } from 'vuex'
-import ScatterJS from 'scatterjs-core'
+import TokenImage from '~/components/elements/TokenImage'
 
 import config from '~/config'
 import { transfer, cancelorder } from '~/store/chain.js'
 
+import { mapGetters } from 'vuex'
+import ScatterJS from 'scatterjs-core'
+
 
 export default {
+  components: {
+    TokenImage
+  },
+
   data() {
     return {
       id: 0,
