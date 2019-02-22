@@ -54,7 +54,13 @@ export default {
       }).then(r => {
         this.history = r.rows.map(h => {
           let t = new Date(h.time * 1000).toLocaleString().split(':')
-          h.time = t[0] + ':' + t[1] + ' ' + t[2].split(' ')[1];
+          h.time = t[0] + ':' + t[1] + ' ' + t[2].split(' ')[1]
+
+          let buyAmount = Number(h.buy.quantity.split(' ')[0])
+          let sellAmount = Number(h.sell.quantity.split(' ')[0])
+
+          h.buy.quantity = Math.round(buyAmount / 0.9975) + ' ' + h.buy.quantity.split(' ')[1]
+          h.sell.quantity = Math.round(sellAmount / 0.9975) + ' ' + h.buy.quantity.split(' ')[1]
 
           return h
         })
