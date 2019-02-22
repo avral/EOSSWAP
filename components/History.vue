@@ -59,8 +59,8 @@ export default {
           let buyAmount = Number(h.buy.quantity.split(' ')[0])
           let sellAmount = Number(h.sell.quantity.split(' ')[0])
 
-          h.buy.quantity = Math.round(buyAmount / 0.9975) + ' ' + h.buy.quantity.split(' ')[1]
-          h.sell.quantity = Math.round(sellAmount / 0.9975) + ' ' + h.buy.quantity.split(' ')[1]
+          h.buy.quantity = Math.round(buyAmount / 0.9975).toFixed(4) + ' ' + h.buy.quantity.split(' ')[1]
+          h.sell.quantity = Math.round(sellAmount / 0.9975).toFixed(4) + ' ' + h.buy.quantity.split(' ')[1]
 
           return h
         })
