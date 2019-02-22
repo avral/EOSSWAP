@@ -10,8 +10,9 @@ div
 
       el-form-item(label="Sell token")
         el-select(v-model="tokenSelect", filterable clearable placeholder='Sell token' @change="sellSellToken").w-100
-          el-option(v-for="b in user.balances" :key="b.currency + '@' + b.contract" :label="b.currency + '@' + b.contract",
-          :value="b.currency + '@' + b.contract")
+          el-option(v-for="b in user.balances" :key="b.currency + '@' + b.contract", :value="b.currency + '@' + b.contract")
+            TokenImage(:src="$tokenLogo(b.currency, b.contract)" height="25")
+            span.ml-3 {{ b.currency + '@' + b.contract }}
 
       el-form-item(v-if="tokenSelect" label="Token amount")
         el-input-number(v-model="form.sell.amount" :precision="4" :step="1").mt-2.w-100
@@ -26,6 +27,8 @@ div
             el-select(v-model='sellSelect',
               filterable placeholder='Select' clearable @change="setBuyToken").w-100
               el-option(label="EOS@eosio.token", value="EOS@eosio.token")
+                TokenImage(:src="$tokenLogo('EOS', 'eosio.token')" height="25")
+                span.ml-3 EOS@eosio.token
 
               el-option(
                 v-for="t in tokens",
@@ -33,6 +36,8 @@ div
                 :label="t.symbol + '@' + t.contract",
                 :value="t.symbol + '@' + t.contract"
               )
+                TokenImage(:src="$tokenLogo(t.symbol, t.contract)" height="25")
+                span.ml-3 {{ t.symbol + '@' + t.contract }}
 
           el-tab-pane(label="Manually")
             el-form-item(label="Token contract" prop="buy.contract")
@@ -51,11 +56,16 @@ div
 </template>
 
 <script>
+import TokenImage from '~/components/elements/TokenImage'
 import config from '~/config'
 
 import { mapGetters } from 'vuex'
 
 export default {
+  components: {
+    TokenImage
+  },
+
   data() {
     return {
       visible: false,
