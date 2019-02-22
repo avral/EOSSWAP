@@ -1,12 +1,12 @@
 <template lang="pug">
 //el-table(:data="history", :prop="{prop: 'block_num', order: 'ascending'}" style='width: 100%')
 el-table(:data="history", row-key="block_num'" style='width: 100%')
-    el-table-column(prop='maker', label='Seller', width='110')
-    el-table-column(prop='buyer', label='Buyer', width='110')
-    el-table-column(prop='sell', label='Sell', width='210')
-    el-table-column(prop='buy', label='Buy', width='210')
+    el-table-column(prop='maker', label='Seller', width='130')
+    el-table-column(prop='buyer', label='Buyer', width='130')
+    el-table-column(prop='sell', label='Sell')
+    el-table-column(prop='buy', label='Buy')
 
-    el-table-column(prop='time', label='Time', width='220')
+    el-table-column(prop='time', label='Time')
 </template>
 
 <script>
