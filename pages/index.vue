@@ -188,6 +188,11 @@ export default {
       try {
         let r = await this.rpc.get_table_rows({code: config.contract, scope: config.contract, table: 'orders'})
         this.orders = r.rows
+
+        this.orders.sort((a, b) => {
+          if(a.id > b.id) return -1;
+          if(a.id < b.id) return 1;
+        })
       } catch(e) {
         this.$notify({ title: 'Load orders', message: e.message, type: 'error' })
       } finally {
