@@ -2,9 +2,13 @@
 .container
   .row
     .col-lg-10.m-auto
-      .display-4
-        nuxt-link(tag="span" :to="{name: 'index'}" style="cursor: pointer;") EOS Swap: 
-        | token exchanger
+      .d-flex.display-4
+        //nuxt-link(tag="span" :to="{name: 'index'}" style="cursor: pointer;") EOS Swap: 
+        nuxt-link(tag="span" :to="{name: 'index'}" style="cursor: pointer;")
+          img(src="~/assets/logo.svg" width="400")
+
+        .align-self-end.ml-5 token exchanger
+        //| token exchanger
 
       el-alert(title="Scatter in not connected:" :closable="false" show-icon type="info" v-if="!$store.state.chain.scatterConnected").mt-2
         span.ml-1 Unlock or install  
