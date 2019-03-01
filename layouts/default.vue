@@ -5,9 +5,9 @@
       .d-flex
         //nuxt-link(tag="span" :to="{name: 'index'}" style="cursor: pointer;") EOS Swap: 
         nuxt-link(tag="span" :to="{name: 'index'}" style="cursor: pointer;")
-          img(src="~/assets/logo.svg" width="400")
+          img(src="~/assets/logo.svg").logo
 
-        .align-self-center.ml-5.lead
+        .align-self-center.ml-5.lead.mt-2
           span Eos trutless otc trading.
           br
           span Trade any eosio token with any eosio token.
@@ -69,6 +69,10 @@ export default {
 </script>
 
 <style>
+.logo {
+  width: 100%;
+}
+
 .container {
   margin-top: 100px;
 }

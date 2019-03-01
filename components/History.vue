@@ -45,7 +45,6 @@ export default {
 
   methods: {
     fetch() {
-
       this.rpc.get_table_rows({
         code: config.contract,
         scope: config.contract,
