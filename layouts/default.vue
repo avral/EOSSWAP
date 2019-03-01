@@ -2,12 +2,15 @@
 .container
   .row
     .col-lg-10.m-auto
-      .d-flex.display-4
+      .d-flex
         //nuxt-link(tag="span" :to="{name: 'index'}" style="cursor: pointer;") EOS Swap: 
         nuxt-link(tag="span" :to="{name: 'index'}" style="cursor: pointer;")
           img(src="~/assets/logo.svg" width="400")
 
-        .align-self-end.ml-5 token exchanger
+        .align-self-center.ml-5.lead
+          span Eos trutless otc trading.
+          br
+          span Trade any eosio token with any eosio token.
         //| token exchanger
 
       el-alert(title="Scatter in not connected:" :closable="false" show-icon type="info" v-if="!$store.state.chain.scatterConnected").mt-2
