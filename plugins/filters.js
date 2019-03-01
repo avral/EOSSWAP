@@ -8,5 +8,8 @@ Vue.filter('monitorAccount', function (account) {
 
 
 Vue.prototype.$tokenLogo = function(symbol, contract) {
+  if (symbol == 'PIXEOS' && contract == 'pixeos1token')
+    return 'https://pixeos.io/ico/apple-touch-icon-57-precomposed.png'
+
   return `https://raw.githubusercontent.com/BlockABC/eos-tokens/master/tokens/${contract}/${symbol}.png`
 }
