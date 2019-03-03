@@ -8,7 +8,7 @@
           img(src="~/assets/logo.svg").logo
 
         .align-self-center.ml-5.lead.mt-2
-          span Eos trutless otc trading.
+          span Eos trustless otc trading.
           br
           span Trade any eosio token with any eosio token.
         //| token exchanger
