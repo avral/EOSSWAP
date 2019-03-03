@@ -18,7 +18,7 @@ div
               el-button(@click="login" size="small").ml-auto(v-if="!user") login
       .row
         .col
-          el-table(:data="filteredItems")
+          el-table(:data="filteredItems" @row-click="clickOrder" row-class-name="order-row")
             el-table-column(label="ID" width="50")
               template(slot-scope='scope')
                 //i.el-icon-time
@@ -29,19 +29,19 @@ div
                 .name-wrapper(slot="reference")
                   el-tag(size="medium") {{ scope.row.maker }}
 
-            el-table-column(label="Sell")
+            el-table-column(label="Sell" width="250")
               template(slot-scope="scope")
                 TokenImage(:src="$tokenLogo(scope.row.sell.quantity.split(' ')[1], scope.row.sell.contract)" height="25")
                 span.ml-2 {{ scope.row.sell.quantity }}@{{ scope.row.sell.contract }}
 
-            el-table-column(label="Buy")
+            el-table-column(label="Buy" width="250")
               template(slot-scope="scope")
                 TokenImage(:src="$tokenLogo(scope.row.buy.quantity.split(' ')[1], scope.row.buy.contract)" height="25")
                 span.ml-2 {{ scope.row.buy.quantity }}@{{ scope.row.buy.contract }}
 
-            el-table-column(label='' width="100")
-              template(slot-scope='scope')
-                el-button(@click="$router.push({name: 'order-id', params: {id: scope.row.id }})" size='mini') Show
+            el-table-column(label="Price")
+              template(slot-scope="scope")
+                span.ml-2 {{ scope.row.price }}
 
     el-tab-pane(label='My balances')
       el-alert(v-if="!user" title="Pleace login" :closable="false" show-icon type="info")
@@ -114,6 +114,10 @@ export default {
   },
 
   methods: {
+    async clickOrder(a) {
+      this.$router.push({name: 'order-id', params: {id: a.id }})
+    },
+
     async logout() {
       await this.$store.dispatch('chain/logout')
     },
@@ -184,6 +188,7 @@ export default {
     async fetch() {
       // TODO Подгрузка с прокруткой
       this.loading = true
+      this.orders = []
 
       let upper_bound = undefined
 
@@ -199,6 +204,18 @@ export default {
             reverse: true,
 
             upper_bound
+          })
+
+          r.rows = r.rows.map(r => {
+            let sell = r.sell.quantity.split(' ')
+            let buy = r.buy.quantity.split(' ')
+
+            let k = 1 / parseFloat(sell[0])
+            let buy_price = (parseFloat(buy[0]) * k).toFixed(4)
+
+            r.price = `1 ${sell[1]} / ${buy_price} ${buy[1]}`
+
+            return r
           })
 
           this.orders = [...this.orders, ...r.rows]
@@ -219,3 +236,11 @@ export default {
   }
 }
 </script>
+
+
+
+<style>
+.order-row {
+  cursor: pointer;
+}
+</style>
