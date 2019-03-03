@@ -228,6 +228,7 @@ export default {
 
         if(r.rows.length > 1) {
           upper_bound = r.rows[r.rows.length - 1].id - 1
+          if (upper_bound < 1) break
         } else {
           break
         }

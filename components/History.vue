@@ -45,7 +45,7 @@ export default {
 
   methods: {
     async fetch() {
-      let lower_bound
+      let upper_bound
       this.history = []
 
       while(true) {
@@ -59,7 +59,7 @@ export default {
             table: 'results',
             reverse: true,
 
-            lower_bound
+            upper_bound
           })
 
           this.history = [
@@ -86,7 +86,8 @@ export default {
         }
 
         if(r.rows.length > 1) {
-          lower_bound = r.rows[r.rows.length - 1].id - 1
+          upper_bound = r.rows[r.rows.length - 1].id - 1
+          if (upper_bound < 1) break
         } else {
           break
         }
