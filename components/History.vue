@@ -46,6 +46,7 @@ export default {
   methods: {
     async fetch() {
       let lower_bound
+      this.history = []
 
       while(true) {
         // fetch all history
