@@ -94,3 +94,36 @@ export function cancelorder(maker, order_id) {
    }, { blocksBehind: 3, expireSeconds: 3 * 60 }
   )
 }
+
+
+// FIXME Patch JsonRpc https://github.com/EOSIO/eosjs/issues/324 not redy for production
+rpc.get_table_rows = async function({
+        json = true,
+        code,
+        scope,
+        table,
+        table_key = "",
+        lower_bound = "",
+        upper_bound = "",
+        index_position = 1,
+        key_type = "",
+        limit = 10,
+        reverse = false,
+        show_payer = false,
+     }) {
+        return await this.fetch(
+            "/v1/chain/get_table_rows", {
+                json,
+                code,
+                scope,
+                table,
+                table_key,
+                lower_bound,
+                upper_bound,
+                index_position,
+                key_type,
+                limit,
+                reverse,
+                show_payer,
+            });
+    }
