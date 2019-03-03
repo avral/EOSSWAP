@@ -44,31 +44,52 @@ export default {
   },
 
   methods: {
-    fetch() {
-      this.rpc.get_table_rows({
-        code: config.contract,
-        scope: config.contract,
-        table: 'results',
-        limit: 100
-      }).then(r => {
-        this.history = r.rows.map(h => {
-          let t = new Date(h.time * 1000).toLocaleString().split(':')
-          h.time = t[0] + ':' + t[1] + ' ' + t[2].split(' ')[1]
+    async fetch() {
+      let lower_bound
 
-          let buyAmount = Number(h.buy.quantity.split(' ')[0])
-          let sellAmount = Number(h.sell.quantity.split(' ')[0])
+      while(true) {
+        // fetch all history
+        let r
 
-          h.buy.quantity = Math.round(buyAmount / 0.9975).toFixed(4) + ' ' + h.buy.quantity.split(' ')[1]
-          h.sell.quantity = Math.round(sellAmount / 0.9975).toFixed(4) + ' ' + h.buy.quantity.split(' ')[1]
+        try {
+          r = await this.rpc.get_table_rows({
+            code: config.contract,
+            scope: config.contract,
+            table: 'results',
+            reverse: true,
 
-          return h
-        })
+            lower_bound
+          })
 
-        this.history.sort((a, b) => {
-          if(a.time > b.time) return -1;
-          if(a.time < b.time) return 1;
-        })
-      })
+          this.history = [
+            ...this.history,
+            ...r.rows.map(h => {
+              let t = new Date(h.time * 1000).toLocaleString().split(':')
+              h.time = t[0] + ':' + t[1] + ' ' + t[2].split(' ')[1]
+
+              let buyAmount = Number(h.buy.quantity.split(' ')[0])
+              let sellAmount = Number(h.sell.quantity.split(' ')[0])
+
+              h.buy.quantity = Math.round(buyAmount / 0.9975).toFixed(4) + ' ' + h.buy.quantity.split(' ')[1]
+              h.sell.quantity = Math.round(sellAmount / 0.9975).toFixed(4) + ' ' + h.buy.quantity.split(' ')[1]
+
+              return h
+            })
+          ]
+
+        } catch(e) {
+          this.$notify({ title: 'Load history', message: e.message, type: 'error' })
+          break
+        } finally {
+          this.loading = false
+        }
+
+        if(r.rows.length > 1) {
+          lower_bound = r.rows[r.rows.length - 1].id - 1
+        } else {
+          break
+        }
+      }
     }
   }
 }
