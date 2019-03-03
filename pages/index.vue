@@ -90,7 +90,7 @@ export default {
         to: ''
       },
 
-      loading: true
+      loading: true,
     }
   },
 
@@ -185,18 +185,35 @@ export default {
       // TODO Подгрузка с прокруткой
       this.loading = true
 
-      try {
-        let r = await this.rpc.get_table_rows({code: config.contract, scope: config.contract, table: 'orders'})
-        this.orders = r.rows
+      let upper_bound = undefined
 
-        this.orders.sort((a, b) => {
-          if(a.id > b.id) return -1;
-          if(a.id < b.id) return 1;
-        })
-      } catch(e) {
-        this.$notify({ title: 'Load orders', message: e.message, type: 'error' })
-      } finally {
-        this.loading = false
+      while(true) {
+        // fetch all orders
+        let r
+
+        try {
+          r = await this.rpc.get_table_rows({
+            code: config.contract,
+            scope: config.contract,
+            table: 'orders',
+            reverse: true,
+
+            upper_bound
+          })
+
+          this.orders = [...this.orders, ...r.rows]
+        } catch(e) {
+          this.$notify({ title: 'Load orders', message: e.message, type: 'error' })
+          break
+        } finally {
+          this.loading = false
+        }
+
+        if(r.rows.length > 1) {
+          upper_bound = r.rows[r.rows.length - 1].id - 1
+        } else {
+          break
+        }
       }
     },
   }
