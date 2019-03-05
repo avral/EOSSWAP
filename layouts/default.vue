@@ -74,6 +74,7 @@ export default {
 <style>
 .logo {
   width: 100%;
+  max-width: 300px;
 }
 
 .container {
