@@ -19,7 +19,7 @@ div
       .row
         .col
           el-table(:data="filteredItems" @row-click="clickOrder" row-class-name="order-row")
-            el-table-column(label="ID" width="60")
+            el-table-column(label="ID" width="50")
               template(slot-scope='scope')
                 //i.el-icon-time
                 nuxt-link(:to="{name: 'order-id', params: {id: scope.row.id }}" style='margin-left: 10px') {{ scope.row.id }}
@@ -29,12 +29,12 @@ div
                 .name-wrapper(slot="reference")
                   el-tag(size="medium") {{ scope.row.maker }}
 
-            el-table-column(label="Sell" width="300")
+            el-table-column(label="Sell" width="340")
               template(slot-scope="scope")
                 TokenImage(:src="$tokenLogo(scope.row.sell.quantity.split(' ')[1], scope.row.sell.contract)" height="25")
                 span.ml-2 {{ scope.row.sell.quantity }}@{{ scope.row.sell.contract }}
 
-            el-table-column(label="Buy" width="300")
+            el-table-column(label="Buy" width="340")
               template(slot-scope="scope")
                 TokenImage(:src="$tokenLogo(scope.row.buy.quantity.split(' ')[1], scope.row.buy.contract)" height="25")
                 span.ml-2 {{ scope.row.buy.quantity }}@{{ scope.row.buy.contract }}
