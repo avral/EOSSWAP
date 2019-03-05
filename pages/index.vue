@@ -210,10 +210,10 @@ export default {
             let sell = r.sell.quantity.split(' ')
             let buy = r.buy.quantity.split(' ')
 
-            let k = 1 / parseFloat(sell[0])
-            let buy_price = (parseFloat(buy[0]) * k).toFixed(4)
+            let k = 1 / parseFloat(buy[0])
+            let buy_price = (parseFloat(sell[0]) * k).toFixed(4)
 
-            r.price = `1 ${sell[1]} / ${buy_price} ${buy[1]}`
+            r.price = `1 ${buy[1]} / ${buy_price} ${sell[1]}`
 
             return r
           })
