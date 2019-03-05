@@ -11,7 +11,10 @@
           span Eos trustless otc trading.
           br
           span Trade any eosio token with any eosio token.
-        //| token exchanger
+        .span.ml-auto.pr-3.pt-3
+          el-tooltip(content="Join us on Telegram!" placement="top" effect="light")
+            a(href="https://t.me/eosswapio" target="_blank")
+              img(src="telegram.png" height="40").ml-2
 
       el-alert(title="Scatter in not connected:" :closable="false" show-icon type="info" v-if="!$store.state.chain.scatterConnected").mt-2
         span.ml-1 Unlock or install  
