@@ -11,9 +11,9 @@ div
             el-input(size="small" v-model="search" placeholder="Filter by token").ml-4.mr-4
 
             .ml-auto
-              span(v-if="user") Login as: 
+              span(v-if="user")
                 a(:href="'https://jungle.eosx.io/account/' + user.name" target="_blank") {{ $store.state.user.name }}
-                el-button(v-if="user" size="mini" @click="logout").ml-2 logout
+                el-button(v-if="user" size="mini" @click="logout").ml-3 logout
 
               el-button(@click="login" size="small").ml-auto(v-if="!user") login
       .row
