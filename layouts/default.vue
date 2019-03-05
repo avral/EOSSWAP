@@ -1,7 +1,7 @@
 <template lang="pug">
 .container
   .row
-    .col-lg-10.m-auto
+    .col-lg.m-auto
       .d-flex
         //nuxt-link(tag="span" :to="{name: 'index'}" style="cursor: pointer;") EOS Swap: 
         nuxt-link(tag="span" :to="{name: 'index'}" style="cursor: pointer;")

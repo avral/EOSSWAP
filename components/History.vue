@@ -1,14 +1,14 @@
 <template lang="pug">
 //el-table(:data="history", :prop="{prop: 'block_num', order: 'ascending'}" style='width: 100%')
 el-table(:data="history", row-key="block_num'" style='width: 100%')
-    el-table-column(prop='maker', label='Seller', width='120')
-    el-table-column(prop='buyer', label='Buyer', width='120')
-    el-table-column(label='Sell' width='250')
+    el-table-column(prop='maker', label='Seller', width='130')
+    el-table-column(prop='buyer', label='Buyer', width='130')
+    el-table-column(label='Sell' width='300')
       template(slot-scope='scope')
         TokenImage(:src="$tokenLogo(scope.row.sell.quantity.split(' ')[1], scope.row.sell.contract)" height="25")
         span.ml-2 {{ scope.row.sell.quantity }}@{{ scope.row.sell.contract }}
 
-    el-table-column(label='Buy' width='250')
+    el-table-column(label='Buy' width='300')
       template(slot-scope='scope')
         TokenImage(:src="$tokenLogo(scope.row.buy.quantity.split(' ')[1], scope.row.buy.contract)" height="25")
         span.ml-2 {{ scope.row.buy.quantity }}@{{ scope.row.buy.contract }}
@@ -66,7 +66,7 @@ export default {
             ...this.history,
             ...r.rows.map(h => {
               let t = new Date(h.time * 1000).toLocaleString().split(':')
-              h.time = t[0] + ':' + t[1] + ' ' + t[2].split(' ')[1]
+              h.time = t[0] + ':' + t[1] + ':' + t[2]
 
               let buyAmount = Number(h.buy.quantity.split(' ')[0])
               let sellAmount = Number(h.sell.quantity.split(' ')[0])
