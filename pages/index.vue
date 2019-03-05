@@ -39,7 +39,7 @@ div
                 TokenImage(:src="$tokenLogo(scope.row.buy.quantity.split(' ')[1], scope.row.buy.contract)" height="25")
                 span.ml-2 {{ scope.row.buy.quantity }}@{{ scope.row.buy.contract }}
 
-            el-table-column(label="Price")
+            el-table-column(label="Price" width="250")
               template(slot-scope="scope")
                 span.ml-2 {{ scope.row.price }}
 
