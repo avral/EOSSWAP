@@ -29,12 +29,12 @@ div
                 .name-wrapper(slot="reference")
                   el-tag(size="medium") {{ scope.row.maker }}
 
-            el-table-column(label="Sell" width="340")
+            el-table-column(label="Sell")
               template(slot-scope="scope")
                 TokenImage(:src="$tokenLogo(scope.row.sell.quantity.split(' ')[1], scope.row.sell.contract)" height="25")
                 span.ml-2 {{ scope.row.sell.quantity }}@{{ scope.row.sell.contract }}
 
-            el-table-column(label="Buy" width="340")
+            el-table-column(label="Buy")
               template(slot-scope="scope")
                 TokenImage(:src="$tokenLogo(scope.row.buy.quantity.split(' ')[1], scope.row.buy.contract)" height="25")
                 span.ml-2 {{ scope.row.buy.quantity }}@{{ scope.row.buy.contract }}
