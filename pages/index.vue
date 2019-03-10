@@ -60,6 +60,8 @@ div
 </template>
 
 <script>
+import { captureException } from '@sentry/browser'
+
 import NewOrderForm from '~/components/NewOrderForm.vue'
 import History from '~/components/History.vue'
 import TokenImage from '~/components/elements/TokenImage'
@@ -132,6 +134,7 @@ export default {
         try {
           await this.$store.dispatch('chain/login')
         } catch(e) {
+          captureException(e)
           this.$notify({ title: 'Scatter login error', message: e.message, type: 'error' })
         } finally {
           loading.close()
@@ -156,6 +159,7 @@ export default {
         this.$notify({ title: 'Success', message: `You fill ${id} order`, type: 'success' })
         this.fetch()
       } catch (e) {
+        captureException(e, {extra: {buy, id}})
         this.$notify({ title: 'Place order', message: e.message, type: 'error' })
         console.log(e)
       } finally {
@@ -178,6 +182,7 @@ export default {
         this.$notify({ title: 'Place order', message: r.processed.action_traces[0].inline_traces[1].console, type: 'success' })
         this.fetch()
       } catch (e) {
+        captureException(e, {extra: {buy, sell}})
         this.$notify({ title: 'Place order', message: e.message, type: 'error' })
         console.log(e)
       } finally {
@@ -220,6 +225,7 @@ export default {
 
           this.orders = [...this.orders, ...r.rows]
         } catch(e) {
+          captureException(e)
           this.$notify({ title: 'Load orders', message: e.message, type: 'error' })
           break
         } finally {

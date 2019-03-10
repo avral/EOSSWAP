@@ -39,6 +39,8 @@ el-card(v-else).box-card.mt-3
 
 <script>
 import TokenImage from '~/components/elements/TokenImage'
+import { captureException } from '@sentry/browser'
+
 
 import config from '~/config'
 import { transfer, cancelorder } from '~/store/chain.js'
@@ -78,6 +80,7 @@ export default {
       try {
         await this.$store.dispatch('chain/login')
       } catch (e) {
+        captureException(e)
         this.$notify({ title: 'Loading error', message: e.message, type: 'error' })
       } finally {
         this.loading = false
@@ -100,6 +103,7 @@ export default {
         this.$notify({ title: 'Success', message: `Order canceled ${order.id}`, type: 'success' })
         this.$router.push({ name: 'index' })
       } catch (e) {
+        captureException(e, {extra: { order }})
         this.$notify({ title: 'Place order', message: e.message, type: 'error' })
         console.log(e)
       } finally {
@@ -126,6 +130,7 @@ export default {
         }
 
       } catch (e) {
+        captureException(e)
         this.$notify({ title: 'Error fetching order', message: e.message, type: 'error' })
       } finally {
         this.loading = false
@@ -160,6 +165,7 @@ export default {
           }
         });
       } catch (e) {
+        captureException(e, {extra: { order: this.order }})
         this.$notify({ title: 'Place order', message: e.message, type: 'error' })
         console.log(e)
       } finally {
