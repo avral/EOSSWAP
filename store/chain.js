@@ -1,5 +1,6 @@
 import config from '~/config'
 
+import * as Sentry from '@sentry/browser'
 import ScatterJS from 'scatterjs-core'
 import ScatterEOS from 'scatterjs-plugin-eosjs2'
 import { Api, JsonRpc, RpcError } from 'eosjs'
@@ -25,8 +26,13 @@ export const actions = {
     console.log('App starting..')
 
     await ScatterJS.connect('Ordersbook', { network }).then(v => commit('setScatterConnected', v))
-    //if (state.scatterConnected)
-    //  dispatch('login')
+
+    if (state.scatterConnected) {
+      let scatter_version = await ScatterJS.scatter.getVersion()
+      Sentry.configureScope((scope) => {
+        scope.setTag("scatter.version", scatter_version)
+      })
+    }
   },
 
   async logout({ commit }) {
