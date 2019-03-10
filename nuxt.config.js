@@ -67,13 +67,22 @@ module.exports = {
   */
   modules: [
     // Doc: https://github.com/nuxt-community/axios-module#usage
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/sentry',
   ],
   /*
   ** Axios module configuration
   */
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
+  },
+
+  /*
+  ** Sentry module configuration
+  */
+  sentry: {
+    dsn: process.env.SENTRY_DSN || 'https://a2a78e2d93f6406ab3bea315676f5517@sentry.io/1411799',
+    disabled: isDev
   },
 
   /*
