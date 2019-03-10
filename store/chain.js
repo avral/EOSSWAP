@@ -1,6 +1,6 @@
 import config from '~/config'
 
-import * as Sentry from '@sentry/browser'
+import { configureScope } from '@sentry/browser'
 import ScatterJS from 'scatterjs-core'
 import ScatterEOS from 'scatterjs-plugin-eosjs2'
 import { Api, JsonRpc, RpcError } from 'eosjs'
@@ -29,7 +29,7 @@ export const actions = {
 
     if (state.scatterConnected) {
       let scatter_version = await ScatterJS.scatter.getVersion()
-      Sentry.configureScope((scope) => {
+      configureScope((scope) => {
         scope.setTag("scatter.version", scatter_version)
       })
     }
@@ -43,6 +43,7 @@ export const actions = {
   async login({ state, commit, dispatch }) {
     let r = await ScatterJS.login()
 
+    configureScope((scope) => scope.setUser({"username": r.accounts[0].name}))
     commit('setUser', r.accounts[0], { root: true })
     dispatch('loadUserBalances', {}, { root: true })
   },
