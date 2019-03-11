@@ -21,6 +21,11 @@
         a(href="https://get-scatter.com/" target="_blank") Scatter
         i(@click="scatterConnect" size="mini").el-alert__closebtn Update
 
+      el-alert(:closable="false" show-icon type="error" v-if="$store.state.chain.oldScatter").mt-4
+        span.ml-1  You are using an old version of Scatter! So the app may not work correctly.
+
+        a(href="https://get-scatter.com/" target="_blank")  Update Scatter
+
       el-alert(title="Node is not connected:" :closable="false"  show-icon type="error" v-if="netError").mt-2
         span.ml-1 Network is unreacheble pleace check your internet connection.
 

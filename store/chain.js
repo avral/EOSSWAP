@@ -18,7 +18,7 @@ const eos = ScatterJS.eos(network, Api, {rpc, beta3:true})
 
 export const state = () => ({
   scatterConnected: true,
-
+  oldScatter: false
 })
 
 export const actions = {
@@ -28,10 +28,17 @@ export const actions = {
     await ScatterJS.connect('Ordersbook', { network }).then(v => commit('setScatterConnected', v))
 
     if (state.scatterConnected) {
-      let scatter_version = await ScatterJS.scatter.getVersion()
-      configureScope((scope) => {
-        scope.setTag("scatter.version", scatter_version)
-      })
+      let scatter_version
+
+      try {
+       scatter_version = await ScatterJS.scatter.getVersion()
+
+      } catch(e) {
+        commit('setOldScatter', true)
+        scatter_version = 'Scatter as browser extention (Unmainteined)'
+      } finally {
+        configureScope((scope) => scope.setTag("scatter.version", scatter_version))
+      }
     }
   },
 
@@ -60,6 +67,7 @@ export const actions = {
 export const mutations = {
   setUser: (state, user) => state.user = user,
   setScatterConnected: (state, value) => state.scatterConnected = value,
+  setOldScatter: (state, value) => state.oldScatter = value,
 }
 
 export const getters = {
