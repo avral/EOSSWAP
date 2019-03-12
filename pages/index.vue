@@ -6,16 +6,16 @@ div
       .row
         .col
           .d-flex
-            new-order-form(@submit="newOrder") Create new order
+            new-order-form(@submit="newOrder" v-if="user").mr-2 Create new order
 
-            el-input(size="small" v-model="search" placeholder="Filter by token").ml-4.mr-4
+            el-input(size="small" v-model="search" placeholder="Filter by token").ml-2.mr-4
 
             .ml-auto
               span(v-if="user")
                 a(:href="'https://jungle.eosx.io/account/' + user.name" target="_blank") {{ $store.state.user.name }}
                 el-button(v-if="user" size="mini" @click="logout").ml-3 logout
 
-              el-button(@click="login" size="small").ml-auto(v-if="!user") Sign In via Scatter
+              el-button(@click="login" type="primary" size="small").ml-auto(v-if="!user") Sign In via Scatter
       .row
         .col
           el-table(:data="filteredItems" @row-click="clickOrder" row-class-name="order-row")
