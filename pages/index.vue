@@ -15,7 +15,7 @@ div
                 a(:href="'https://jungle.eosx.io/account/' + user.name" target="_blank") {{ $store.state.user.name }}
                 el-button(v-if="user" size="mini" @click="logout").ml-3 logout
 
-              el-button(@click="login" size="small").ml-auto(v-if="!user") login
+              el-button(@click="login" size="small").ml-auto(v-if="!user") Sign In via Scatter
       .row
         .col
           el-table(:data="filteredItems" @row-click="clickOrder" row-class-name="order-row")
@@ -56,6 +56,28 @@ div
         el-table-column(prop='amount', label='amount')
     el-tab-pane(label='History')
       history
+
+    el-tab-pane(label='Rules & Information')
+      h4.ml-3.mt-3 Properties:
+        ul.mt-1
+          li.lead All the logic of order storage and exchange takes place in the contract, without any additional centralized solutions.
+          li.lead The exchange works automatically, without the possibility of third parties to influence the work of the contract.
+          li.lead This application works without centralized back-end and uses only the public EOS node.
+          li.lead Each exchange is charged a commission of 0.25% for both tokens.
+
+      h4.ml-3 Roadmap:
+        ul.mt-1
+          li.lead Global redesign of the application.
+          li.lead The web application will be published in open source. And contract later.
+          li.lead Development of additional services for easy search, sorting and working with orders.
+
+      h4.ml-3 Audit:
+        ul.mt-1
+          li.lead Exchange contract: 
+            a(:href="'wwweosswapio' | monitorAccount" target="_blank") wwweosswapio
+
+          li.lead Comission account: 
+            a(:href="'eosswapdivs1' | monitorAccount" target="_blank") eosswapdivs1
 
 </template>
 
