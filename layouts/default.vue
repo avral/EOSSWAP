@@ -36,7 +36,7 @@
       .col.d-flex
         span.ml-auto Created by
           b  
-            a(href="https://github.com/avral" target="_blank")  #Avral
+            a(href="https://avral.pro" target="_blank")  #Avral
 </template>
 
 <script>
