@@ -1,4 +1,5 @@
 <template lang="pug">
+// TODO Refactor with walidators for form
 div
   el-button(size="medium" type="primary" @click="open").ml-auto
     span
@@ -17,7 +18,7 @@ div
       el-form-item(v-if="tokenSelect" label="Token amount")
         el-input-number(v-model="form.sell.amount" :precision="4" :step="1").mt-2.w-100
 
-      div(v-if="form.sell.amount")
+      div(v-if="form.sell.amount > 0")
         hr
 
         h1.leader Buy
@@ -52,7 +53,7 @@ div
           el-input-number(v-model="form.buy.amount" :precision="4" :step="1").mt-2.w-100
 
         span.dialog-footer
-          el-button(type='primary' v-if="form.buy.amount != 'NaN'" @click="submit").mt-3.w-100 Create order
+          el-button(type='primary' v-if="form.buy.amount > 0" @click="submit").mt-3.w-100 Create order
 </template>
 
 <script>
