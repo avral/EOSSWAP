@@ -1,6 +1,6 @@
-# ordersbook-ui
+## [EOSSWAP.IO](https://eosswap.io)
 
-> Exchange for eosio.token&#39;s
+> Exchange for eosio.token's
 
 ## Build Setup
 
@@ -18,5 +18,3 @@ $ yarn start
 # generate static project
 $ yarn run generate
 ```
-
-For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
