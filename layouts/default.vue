@@ -1,5 +1,5 @@
 <template lang="pug">
-.container
+.container.mb-5
   .row
     .col-lg.m-auto
       .d-flex
