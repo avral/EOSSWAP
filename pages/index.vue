@@ -44,7 +44,7 @@ div
                 span.ml-2 {{ scope.row.price }}
 
     el-tab-pane(label='My balances')
-      el-alert(v-if="!user" title="Pleace login" :closable="false" show-icon type="info")
+      el-alert(v-if="!user" title="Please login" :closable="false" show-icon type="info")
 
       el-table(v-else :data="user.balances", style='width: 100%')
         el-table-column(label='currency')
@@ -190,8 +190,7 @@ export default {
     },
 
     async newOrder({ buy, sell }) {
-      let quantity = `${sell.amount.toFixed(4)} ${sell.symbol}`
-      let sell_quantity = `${buy.amount.toFixed(4)} ${buy.symbol}@${buy.contract}`
+      console.log( buy, sell)
 
       const loading = this.$loading({
         lock: true,
@@ -199,7 +198,7 @@ export default {
       });
 
       try {
-        let r = await transfer(sell.contract, this.user.name, quantity, `place|${sell_quantity}`)
+        let r = await transfer(sell.contract, this.user.name, sell.quantity, `place|${buy.quantity}`)
 
         this.$notify({ title: 'Place order', message: r.processed.action_traces[0].inline_traces[1].console, type: 'success' })
         this.fetch()

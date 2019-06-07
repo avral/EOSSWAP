@@ -7,16 +7,21 @@ div
 
   el-dialog(v-if="user" title="Create new order", :visible.sync="visible" width="50%")
     el-form(ref="form" :model="form" label-position="left" :rules="rules")
+      // TODO Bit symbol and amount here
       h1.leader Sell
 
       el-form-item(label="Sell token")
-        el-select(v-model="tokenSelect", filterable clearable placeholder='Sell token' @change="sellSellToken").w-100
-          el-option(v-for="b in user.balances" :key="b.currency + '@' + b.contract", :value="b.currency + '@' + b.contract")
+        el-select(v-model="tokenSelect", value-key="id" filterable clearable placeholder='Sell token' @change="sellSellToken").w-100
+          el-option(v-for="b in user.balances" :key="b.id", :value="b" :label="`${b.id} ->  ${b.amount} ${b.currency}`")
             TokenImage(:src="$tokenLogo(b.currency, b.contract)" height="25")
-            span.ml-3 {{ b.currency + '@' + b.contract }}
+            span.ml-3 {{ b.id }}
+            span.float-right {{ `${b.amount} ${b.currency}` }}
 
       el-form-item(v-if="tokenSelect" label="Token amount")
-        el-input-number(v-model="form.sell.amount" :precision="4" :step="1").mt-2.w-100
+        el-input-number(v-model="form.sell.amount" :max="form.sell.maxAmount" :precision="form.sell.precision" :step="1").mt-2.w-100
+          
+
+        //el-input-number(v-model="form.buy.amount" :precision="4" :step="1").mt-2.w-100
 
       div(v-if="form.sell.amount > 0")
         hr
@@ -25,17 +30,16 @@ div
 
         el-tabs
           el-tab-pane(label="Auto select")
-            el-select(v-model='sellSelect',
-              filterable placeholder='Select' clearable @change="setBuyToken").w-100
-              el-option(label="EOS@eosio.token", value="EOS@eosio.token")
+            el-select(v-model='sellSelect' value-key="id" filterable placeholder='Select' clearable @change="setBuyToken").w-100
+              el-option(label="EOS@eosio.token", :value="{symbol: 'EOS', contract: 'eosio.token', precision: 4}")
                 TokenImage(:src="$tokenLogo('EOS', 'eosio.token')" height="25")
                 span.ml-3 EOS@eosio.token
 
               el-option(
                 v-for="t in tokens",
-                :key="t.symbol + '@' + t.contract",
-                :label="t.symbol + '@' + t.contract",
-                :value="t.symbol + '@' + t.contract"
+                :key="t.id",
+                :label="t.id",
+                :value="t"
               )
                 TokenImage(:src="$tokenLogo(t.symbol, t.contract)" height="25")
                 span.ml-3 {{ t.symbol + '@' + t.contract }}
@@ -49,14 +53,16 @@ div
               el-input(placeholder="DICE TRYBE CAT EOS etc.." v-model="form.buy.symbol").upperinput
 
         el-form-item(v-if="form.buy.symbol" label="Token amount")
-          // TODO Сделать max
-          el-input-number(v-model="form.buy.amount" :precision="4" :step="1").mt-2.w-100
+          //el-input-number(v-model="form.sell.amount" :max="form.sell.maxAmount" :precision="form.sell.precision" :step="1").mt-2.w-100
+          el-input-number(v-model="form.buy.amount" :precision="form.buy.precision" :step="1").mt-2.w-100
 
         span.dialog-footer
           el-button(type='primary' v-if="form.buy.amount > 0" @click="submit").mt-3.w-100 Create order
 </template>
 
 <script>
+import { captureException } from '@sentry/browser'
+
 import TokenImage from '~/components/elements/TokenImage'
 import config from '~/config'
 
@@ -79,12 +85,14 @@ export default {
           symbol: '',
           amount: Number,
           contract: '',
+          amount: 0.0
         },
 
         buy: {
           symbol: '',
           amount: Number,
           contract: '',
+          amount: 0.0
         }
       },
 
@@ -106,10 +114,12 @@ export default {
           validator: async (rule, value, callback) => {
             let r = await this.rpc.get_currency_stats(this.form.buy.contract, value)
 
-            if (value in r)
+            if (value in r) {
               callback()
-            else
+              this.setBuyToken({contract: this.form.buy.contract, symbol: value})
+            } else {
               callback(new Error(`No ${value} symbol in ${this.form.buy.contract} contract`))
+            }
           },
         }
       },
@@ -129,19 +139,38 @@ export default {
   },
 
   methods: {
-    filterBySymbol(value) {
-      console.log(this.tokens.slice(0, 2))
-      return this.tokens.slice(0, 2)
+    sellSellToken(token) {
+      this.form.sell = {
+        symbol: token.currency,
+        contract: token.contract,
+        precision: parseInt(token.decimals),
+        maxAmount: parseFloat(token.amount),
+        amount: 0.0
+      }
     },
 
-    sellSellToken(a) {
-      this.form.sell.symbol = a.split('@')[0]
-      this.form.sell.contract = a.split('@')[1]
-    },
+    async setBuyToken(token) {
+      let precision = 4;
 
-    setBuyToken(a) {
-      this.form.buy.symbol = a.split('@')[0]
-      this.form.buy.contract = a.split('@')[1]
+      try {
+        let { rows: [ stat ] } = await this.rpc.get_table_rows({
+          code: token.contract,
+          scope: token.symbol,
+          table: 'stat',
+        })
+        precision = stat.max_supply.split(' ')[0].split('.')[1].length
+      } catch (e) {
+        captureException(e, {extra: { token }})
+        this.$notify({ title: 'Fetch token', message: e.message, type: 'warning' })
+        console.log(e)
+      }
+
+      this.form.buy = {
+        symbol: token.symbol,
+        contract: token.contract,
+        amount: 0.0,
+        precision
+      }
     },
 
     open() {
@@ -169,6 +198,7 @@ export default {
                 return 0;
             })
 
+            this.tokens.map(b => b.id = b.symbol + '@' + b.contract)
           }
         })
 
@@ -177,21 +207,19 @@ export default {
     },
 
     submit() {
-      let form = this.form
+      let form = { ...this.form } // Copy the reactive object
 
-      let { buy, sell } = form
+      form.sell.quantity = `${form.sell.amount.toFixed(form.sell.precision)} ${form.sell.symbol}` 
+      form.buy.quantity = `${form.buy.amount.toFixed(form.buy.precision)} ${form.buy.symbol}@${form.buy.contract}`
 
-      let quantity = `${sell.amount.toFixed(4)} ${sell.symbol}`
-      let sell_quantity = `${buy.amount.toFixed(4)} ${buy.symbol}@${buy.contract}`
-
-      this.$confirm(`Are you sure to sell ${quantity}@${sell.contract} for ${sell_quantity}`, 'Sell', {
+      this.$confirm(`Are you sure to sell ${form.sell.quantity} for ${form.buy.quantity}`, 'Sell', {
         confirmButtonText: 'Sell',
         cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(async () => {
-        this.$emit('submit', form)
-        this.visible = false
-      }).catch(() => {
+          this.$emit('submit', form)
+          this.visible = false
+        }).catch(() => {
       })
     }
   },

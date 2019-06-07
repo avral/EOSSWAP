@@ -24,6 +24,8 @@ export const actions = {
             return 0;
         })
 
+        balances.map(b => b.id = b.currency + '@' + b.contract)
+
         commit('setUser', { ...state.user, balances }, { root: true })
       })
     }
