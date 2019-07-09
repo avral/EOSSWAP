@@ -1,6 +1,12 @@
 ## [EOSSWAP.IO](https://eosswap.io)
 
-> Exchange for eosio.token's
+![EOSSWAP](https://a.imge.to/2019/07/09/TlwaR.png)
+
+> EOS trustless OTC trading
+
+With EOSSWAP you can exchange any EOS.IO tokens, for any other EOS.IO tokens, 
+atomically, without the participation of third parties! The tokens should comply with the 
+standard eosio.token of the contract.
 
 ## Build Setup
 
@@ -9,10 +15,10 @@
 $ yarn install
 
 # serve with hot reload at localhost:3000
-$ yarn run dev
+$ NETWORK=<eos/jungle/local> yarn run dev
 
 # build for production and launch server
-$ yarn run build
+$ NETWORK=<eos/jungle/local> yarn run build
 $ yarn start
 
 # generate static project
