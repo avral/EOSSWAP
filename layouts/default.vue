@@ -7,7 +7,7 @@
         nuxt-link(tag="span" :to="{name: 'index'}" style="cursor: pointer;")
           img(src="~/assets/logo.svg").logo
 
-        .align-self-center.ml-5.lead.mt-2
+        h1.align-self-center.ml-5.lead.mt-2
           span Eos trustless otc trading.
           br
           span Trade any eosio token with any eosio token.

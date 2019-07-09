@@ -3,6 +3,9 @@ const pkg = require('./package')
 const isSPA = process.argv.includes('--spa')
 const isDev = process.env.npm_lifecycle_event == 'dev'
 
+
+const desc = 'With EOSSWAP you can exchange any EOS.IO tokens, for any other EOS.IO tokens, atomically, without the participation of third parties! The tokens should comply with the standard eosio.token of the contract.'
+
 module.exports = {
   mode: 'spa',
 
@@ -15,11 +18,11 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: 'EOS Swap',
+    title: 'EOS Swap | EOSIO Trustless tokens swaps.',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: pkg.description },
+      { hid: 'description', name: 'description', content: desc },
       { name: 'msapplication-TileColor', content: '#da532c' },
       { name: 'theme-color', content: '#ffffff' },
     ],
