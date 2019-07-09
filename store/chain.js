@@ -31,8 +31,10 @@ export const actions = {
       let scatter_version
 
       try {
-       scatter_version = await ScatterJS.scatter.getVersion()
+        scatter_version = await ScatterJS.scatter.getVersion()
 
+        // Automatic login
+        dispatch('login') 
       } catch(e) {
         commit('setOldScatter', true)
         scatter_version = 'Scatter as browser extention (Unmainteined)'
@@ -48,11 +50,15 @@ export const actions = {
   },
 
   async login({ state, commit, dispatch }) {
-    let r = await ScatterJS.login()
+    try {
+      let r = await ScatterJS.login()
 
-    configureScope((scope) => scope.setUser({"username": r.accounts[0].name}))
-    commit('setUser', r.accounts[0], { root: true })
-    dispatch('loadUserBalances', {}, { root: true })
+      configureScope((scope) => scope.setUser({"username": r.accounts[0].name}))
+      commit('setUser', r.accounts[0], { root: true })
+      dispatch('loadUserBalances', {}, { root: true })
+    } catch(e) {
+      this._vm.$notify({ title: 'Login', message: e.message, type: 'error' })
+    }
   },
 
   async scatterConnect({ commit }) {
