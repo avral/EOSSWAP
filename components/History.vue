@@ -1,23 +1,23 @@
 <template lang="pug">
 //el-table(:data="history", :prop="{prop: 'block_num', order: 'ascending'}" style='width: 100%')
 el-table(:data="history", row-key="block_num'" style='width: 100%')
-    el-table-column(prop='maker', label='Seller', width='130')
-    el-table-column(prop='buyer', label='Buyer', width='130')
-    el-table-column(label='Sell' width='320')
+    el-table-column(prop='maker', label='Seller', width='125')
+    el-table-column(prop='buyer', label='Buyer', width='125')
+    el-table-column(label='Sell' width='200')
       template(slot-scope='scope')
-        TokenImage(:src="$tokenLogo(scope.row.sell.quantity.split(' ')[1], scope.row.sell.contract)" height="25")
-        span.ml-2 {{ scope.row.sell.quantity }}@{{ scope.row.sell.contract }}
+        ShortToken(:token="scope.row.sell")
 
-    el-table-column(label='Buy' width='320')
+    el-table-column(label='Buy' width='200')
       template(slot-scope='scope')
-        TokenImage(:src="$tokenLogo(scope.row.buy.quantity.split(' ')[1], scope.row.buy.contract)" height="25")
-        span.ml-2 {{ scope.row.buy.quantity }}@{{ scope.row.buy.contract }}
+        ShortToken(:token="scope.row.buy")
 
     el-table-column(prop='time', label='Time')
+    el-table-column(prop='price', label='Price')
 </template>
 
 <script>
 import TokenImage from '~/components/elements/TokenImage'
+import ShortToken from '~/components/elements/ShortToken'
 
 import config from '~/config'
 
@@ -25,7 +25,8 @@ import { mapGetters } from 'vuex'
 
 export default {
   components: {
-    TokenImage
+    TokenImage,
+    ShortToken
   },
 
   data() {
@@ -68,11 +69,16 @@ export default {
               let t = new Date(h.time * 1000).toLocaleString().split(':')
               h.time = t[0] + ':' + t[1] + ':' + t[2]
 
-              let buyAmount = Number(h.buy.quantity.split(' ')[0])
-              let sellAmount = Number(h.sell.quantity.split(' ')[0])
+              let buyAmount = parseFloat(h.buy.quantity.split(' ')[0])
+              let sellAmount = parseFloat(h.sell.quantity.split(' ')[0])
 
-              h.buy.quantity = Math.round(buyAmount / 0.9975).toFixed(4) + ' ' + h.buy.quantity.split(' ')[1]
-              h.sell.quantity = Math.round(sellAmount / 0.9975).toFixed(4) + ' ' + h.sell.quantity.split(' ')[1]
+              let k = 1 / buyAmount
+              let buy_price = (sellAmount * k).toFixed(4)
+
+              h.price = `1 ${h.buy.quantity.split(' ')[1]} / ${buy_price} ${h.sell.quantity.split(' ')[1]}`
+
+              h.buy.quantity = (buyAmount / 0.9975).toFixed(4) + ' ' + h.buy.quantity.split(' ')[1]
+              h.sell.quantity = (sellAmount / 0.9975).toFixed(4) + ' ' + h.sell.quantity.split(' ')[1]
 
               return h
             })
