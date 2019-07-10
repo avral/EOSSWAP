@@ -16,7 +16,7 @@
             a(href="https://t.me/eosswapio" target="_blank")
               img(src="telegram.png" height="40").ml-2
 
-      el-alert(title="Scatter in not connected:" :closable="false" show-icon type="info" v-if="!$store.state.chain.scatterConnected").mt-2
+      el-alert(title="Scatter is not connected:" :closable="false" show-icon type="info" v-if="!$store.state.chain.scatterConnected").mt-2
         span.ml-1 Unlock or install  
         a(href="https://get-scatter.com/" target="_blank") Scatter
         i(@click="scatterConnect" size="mini").el-alert__closebtn Update

@@ -50,6 +50,9 @@ export const actions = {
   },
 
   async login({ state, commit, dispatch }) {
+    if (!state.scatterConnected)
+      return this._vm.$notify({ title: 'Login', message: 'Scatter is not connected', type: 'error' })
+
     try {
       let r = await ScatterJS.login()
 

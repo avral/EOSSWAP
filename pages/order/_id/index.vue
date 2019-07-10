@@ -25,7 +25,7 @@ el-card(v-if="!no_found" v-loading="loading").box-card.mt-3
       el-button(v-else type="primary" @click="buy").w-100 Buy  
         |  {{ order.sell.quantity }}@{{ order.sell.contract }}
     div(v-else)
-      el-button(@click="login()").w-100 Pleace login
+      el-button(@click="login").w-100 Pleace login
 
 
 el-card(v-else).box-card.mt-3
