@@ -1,5 +1,6 @@
 import config from '~/config'
 
+import fetch from 'node-fetch'
 import { configureScope } from '@sentry/browser'
 import ScatterJS from 'scatterjs-core'
 import ScatterEOS from 'scatterjs-plugin-eosjs2'

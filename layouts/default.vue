@@ -8,7 +8,7 @@
           img(src="~/assets/logo.svg").logo
 
         h1.align-self-center.ml-5.lead.mt-2
-          span Eos trustless OTC trading.
+          span EOS trustless OTC trading.
           br
           span Trade any eosio token with any eosio token.
         .span.ml-auto.pr-3.pt-3
