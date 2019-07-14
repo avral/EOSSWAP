@@ -11,7 +11,10 @@
           span EOS trustless OTC trading.
           br
           span Trade any eosio token with any eosio token.
-        .span.ml-auto.pr-3.pt-3
+
+        .d-flex.align-items-center.span.ml-auto.pr-3.pt-3
+          gh-btns-star(slug="avral/eosswap" show-count)
+
           el-tooltip(content="Join us on Telegram!" placement="top" effect="light")
             a(href="https://t.me/eosswapio" target="_blank")
               img(src="telegram.png" height="40").ml-2
@@ -40,10 +43,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-
-import config from '~/config'
-
 export default {
   data() {
     return {

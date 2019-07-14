@@ -67,6 +67,7 @@ module.exports = {
     // Doc: https://github.com/nuxt-community/axios-module#usage
     '@nuxtjs/axios',
     '@nuxtjs/sentry',
+    'vue-github-buttons/nuxt',
   ],
   /*
   ** Axios module configuration
