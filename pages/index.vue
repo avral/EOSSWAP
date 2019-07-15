@@ -83,6 +83,17 @@ div
           li.lead Comission account: 
             a(:href="'eosswapdivs1' | monitorAccount" target="_blank") eosswapdivs1
 
+    el-tab-pane(label='Partners').p-3
+      .lead.mb-4 Friends and partners of the project. By any collaborations you can send your suggestions to telegram chat!
+
+      hr
+      .d-flex
+        .d-flex.align-items-center.span
+          img(src="https://www.eosnameswaps.com/images/ens_logo.jpg" height="80").mr-3
+          .lead A decentralized EOS account exchange.
+
+
+
 </template>
 
 <script>
