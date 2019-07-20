@@ -20,6 +20,7 @@ import TokenImage from '~/components/elements/TokenImage'
 import ShortToken from '~/components/elements/ShortToken'
 
 import config from '~/config'
+import { calculatePrice, parseAsset } from '~/utils'
 
 import { mapGetters } from 'vuex'
 
@@ -63,25 +64,23 @@ export default {
             upper_bound
           })
 
+          // Prepare history objects
+          r.rows.map(h => {
+            let t = new Date(h.time * 1000).toLocaleString().split(':')
+            h.time = t[0] + ':' + t[1] + ':' + t[2]
+
+            h.sell = parseAsset(h.sell)
+            h.buy = parseAsset(h.buy)
+
+            h.price = calculatePrice(h.sell, h.buy)
+
+            h.buy.amount /= 0.9975
+            h.sell.amount /= 0.9975
+          })
+
           this.history = [
             ...this.history,
-            ...r.rows.map(h => {
-              let t = new Date(h.time * 1000).toLocaleString().split(':')
-              h.time = t[0] + ':' + t[1] + ':' + t[2]
-
-              let buyAmount = parseFloat(h.buy.quantity.split(' ')[0])
-              let sellAmount = parseFloat(h.sell.quantity.split(' ')[0])
-
-              let k = 1 / buyAmount
-              let buy_price = (sellAmount * k).toFixed(4)
-
-              h.price = `1 ${h.buy.quantity.split(' ')[1]} / ${buy_price} ${h.sell.quantity.split(' ')[1]}`
-
-              h.buy.quantity = (buyAmount / 0.9975).toFixed(4) + ' ' + h.buy.quantity.split(' ')[1]
-              h.sell.quantity = (sellAmount / 0.9975).toFixed(4) + ' ' + h.sell.quantity.split(' ')[1]
-
-              return h
-            })
+            ...r.rows
           ]
 
         } catch(e) {
