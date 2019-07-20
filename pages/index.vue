@@ -108,6 +108,7 @@ import axios from 'axios'
 import config from '~/config'
 import { mapGetters } from 'vuex'
 import { transfer } from '~/store/chain.js'
+import { calculatePrice } from '~/utils'
 
 
 export default {
@@ -247,16 +248,10 @@ export default {
             upper_bound
           })
 
-          r.rows = r.rows.map(r => {
-            let sell = r.sell.quantity.split(' ')
-            let buy = r.buy.quantity.split(' ')
-
-            let k = 1 / parseFloat(buy[0])
-            let buy_price = (parseFloat(sell[0]) * k).toFixed(4)
-
-            r.price = `1 ${buy[1]} / ${buy_price} ${sell[1]}`
-
-            return r
+          r.rows.map(r => {
+            // Calculate price for each order
+            // TODO parseAsset here
+            r.price = calculatePrice(r.sell, r.buy)
           })
 
           this.orders = [...this.orders, ...r.rows]
