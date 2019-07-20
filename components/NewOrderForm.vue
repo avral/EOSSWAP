@@ -55,9 +55,10 @@ div
         el-form-item(v-if="form.buy.symbol" label="Token amount")
           //el-input-number(v-model="form.sell.amount" :max="form.sell.maxAmount" :precision="form.sell.precision" :step="1").mt-2.w-100
           el-input-number(v-model="form.buy.amount" :precision="form.buy.precision" :step="1").mt-2.w-100
+          .lead.mt-2 Price: {{ price }}
 
         span.dialog-footer
-          el-button(type='primary' v-if="form.buy.amount > 0" @click="submit").mt-3.w-100 Create order
+          el-button(type='primary' v-if="form.buy.amount > 0" @click="submit").w-100 Create order
 </template>
 
 <script>
@@ -65,6 +66,7 @@ import { captureException } from '@sentry/browser'
 
 import TokenImage from '~/components/elements/TokenImage'
 import config from '~/config'
+import { calculatePrice } from '~/utils'
 
 import { mapGetters } from 'vuex'
 
@@ -83,14 +85,12 @@ export default {
       form: {
         sell: {
           symbol: '',
-          amount: Number,
           contract: '',
           amount: 0.0
         },
 
         buy: {
           symbol: '',
-          amount: Number,
           contract: '',
           amount: 0.0
         }
@@ -131,7 +131,11 @@ export default {
 
   computed: {
     ...mapGetters(['user']),
-    ...mapGetters('chain', ['rpc'])
+    ...mapGetters('chain', ['rpc']),
+
+    price() {
+      return calculatePrice(this.form.sell, this.form.buy)
+    }
   },
 
   created() {
