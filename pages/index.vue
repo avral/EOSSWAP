@@ -88,9 +88,10 @@ div
 
       hr
       .d-flex
-        .d-flex.align-items-center.span
-          img(src="https://www.eosnameswaps.com/images/ens_logo.jpg" height="80").mr-3
-          .lead A decentralized EOS account exchange.
+        a(href="https://eosnameswaps.com" target="_blank").btn
+          .d-flex.align-items-center.span
+            img(src="https://www.eosnameswaps.com/images/ens_logo.jpg" height="80").mr-3
+            .lead A decentralized EOS account exchange.
 
 
 
