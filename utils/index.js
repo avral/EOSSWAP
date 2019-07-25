@@ -15,7 +15,6 @@ export function calculatePrice(sell, buy) {
 export function parseAsset(asset) {
   if (asset.hasOwnProperty('symbol')) return asset
 
-
   let paths = asset.quantity.split(' ')
   return {
     symbol: paths[1],

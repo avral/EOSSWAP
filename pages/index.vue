@@ -32,12 +32,21 @@ div
             el-table-column(label="Sell")
               template(slot-scope="scope")
                 TokenImage(:src="$tokenLogo(scope.row.sell.quantity.split(' ')[1], scope.row.sell.contract)" height="25")
-                span.ml-2 {{ scope.row.sell.quantity }}@{{ scope.row.sell.contract }}
+                span.ml-2(v-if="scope.row.sell.symbol == 'EOS' && scope.row.sell.contract != 'eosio.token'")
+                  el-tooltip(effect="dark" content='This is not "EOS" system token, be careful' placement="top")
+                    el-tag(type="danger") {{ scope.row.sell.quantity }}@{{ scope.row.sell.contract }}
+
+                span.ml-2(v-else) {{ scope.row.sell.quantity }}@{{ scope.row.sell.contract }}
 
             el-table-column(label="Buy")
               template(slot-scope="scope")
-                TokenImage(:src="$tokenLogo(scope.row.buy.quantity.split(' ')[1], scope.row.buy.contract)" height="25")
-                span.ml-2 {{ scope.row.buy.quantity }}@{{ scope.row.buy.contract }}
+                TokenImage(:src="$tokenLogo(scope.row.buy.symbol, scope.row.buy.contract)" height="25")
+                //span.ml-2(v-if="symbol == 'EOS'") {{ scope.row.buy.quantity }}@{{ scope.row.buy.contract }}
+                span.ml-2(v-if="scope.row.buy.symbol == 'EOS' && scope.row.buy.contract != 'eosio.token'")
+                  el-tooltip(effect="dark" content="Top Center prompts info" placement="top")
+                    el-tag(type="danger") {{ scope.row.buy.quantity }}@{{ scope.row.buy.contract }}
+
+                span.ml-2(v-else) {{ scope.row.buy.quantity }}@{{ scope.row.buy.contract }}
 
             el-table-column(label="Price" width="250")
               template(slot-scope="scope")
@@ -109,7 +118,7 @@ import axios from 'axios'
 import config from '~/config'
 import { mapGetters } from 'vuex'
 import { transfer } from '~/store/chain.js'
-import { calculatePrice } from '~/utils'
+import { parseAsset, calculatePrice } from '~/utils'
 
 
 export default {
@@ -253,6 +262,8 @@ export default {
             // Calculate price for each order
             // TODO parseAsset here
             r.price = calculatePrice(r.sell, r.buy)
+            r.buy = parseAsset(r.buy)
+            r.sell = parseAsset(r.sell)
           })
 
           this.orders = [...this.orders, ...r.rows]
