@@ -34,6 +34,14 @@
 
       nuxt
 
+      .row.mt-3
+        .col.text-mutted
+          small
+            span.text-muted App version: 
+              a(href="https://github.com/avral/eosswap" target="_blank").text-secondary {{ lastCommit.sha }} 
+                span(v-if="lastCommit.commit") ({{ lastCommit.commit.message }})
+
+
   footer
     .row
       .col.d-flex
@@ -43,14 +51,19 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   data() {
     return {
-      netError: false
+      netError: false,
+      lastCommit: {}
     }
   },
 
   async created() {
+    this.getVersion()
+
     try {
       await this.$store.getters['chain/rpc'].get_info()
     } catch(e) {
@@ -70,6 +83,10 @@ export default {
       } catch(e) {
         this.$notify({ title: 'Scatter error', message: e.message, type: 'error' })
       }
+    },
+
+    async getVersion() {
+      this.lastCommit = (await axios.get('https://api.github.com/repos/avral/eosswap/commits/master')).data
     }
   }
 }
