@@ -19,7 +19,7 @@ div
       .row
         .col
           el-table(:data="filteredItems" @row-click="clickOrder" row-class-name="order-row")
-            el-table-column(label="ID" width="50")
+            el-table-column(label="ID" width="70")
               template(slot-scope='scope')
                 //i.el-icon-time
                 nuxt-link(:to="{name: 'order-id', params: {id: scope.row.id }}" style='margin-left: 10px') {{ scope.row.id }}
