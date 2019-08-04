@@ -76,7 +76,7 @@ div
           li.lead All the logic of order storage and exchange takes place in the contract, without any additional centralized solutions.
           li.lead The exchange works automatically, without the possibility of third parties to influence the work of the contract.
           li.lead This application works without centralized back-end and uses only the public EOS node.
-          li.lead Each exchange is charged a commission of 0.25% for both tokens.
+          li.lead Each exchange is charged a commission of 0.25% for both tokens if the transaction amount is sufficient. Otherwise, for small amounts, no commission will be charged.
 
       h4.ml-3 Roadmap:
         ul.mt-1
