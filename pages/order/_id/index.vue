@@ -59,7 +59,7 @@ import ScatterJS from 'scatterjs-core'
 export default {
   head() {
     return {
-      title: `EOSSWAP | Order ${this.order.id} sell ${this.order.sell.quantity} for ${this.order.buy.quantity} by omgnoob4ever`
+      title: `EOSSWAP | Sell ${this.order.sell.quantity} for ${this.order.buy.quantity} by omgnoob4ever`
     }
   },
 
