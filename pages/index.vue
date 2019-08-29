@@ -29,7 +29,7 @@ div
                 .name-wrapper(slot="reference")
                   el-tag(size="medium") {{ scope.row.maker }}
 
-            el-table-column(label="Sell")
+            el-table-column(label="Sell" sortable :sort-method="sortBySell")
               template(slot-scope="scope")
                 TokenImage(:src="$tokenLogo(scope.row.sell.quantity.split(' ')[1], scope.row.sell.contract)" height="25")
                 span.ml-2(v-if="scope.row.sell.symbol == 'EOS' && scope.row.sell.contract != 'eosio.token'")
@@ -38,7 +38,7 @@ div
 
                 span.ml-2(v-else) {{ scope.row.sell.quantity }}@{{ scope.row.sell.contract }}
 
-            el-table-column(label="Buy")
+            el-table-column(label="Buy" sortable :sort-method="sortByBuy")
               template(slot-scope="scope")
                 TokenImage(:src="$tokenLogo(scope.row.buy.symbol, scope.row.buy.contract)" height="25")
                 //span.ml-2(v-if="symbol == 'EOS'") {{ scope.row.buy.quantity }}@{{ scope.row.buy.contract }}
@@ -48,7 +48,7 @@ div
 
                 span.ml-2(v-else) {{ scope.row.buy.quantity }}@{{ scope.row.buy.contract }}
 
-            el-table-column(label="Price" width="250")
+            el-table-column(label="Price" width="250" sortable :sort-method="sortByPrice")
               template(slot-scope="scope")
                 span.ml-2 {{ scope.row.price }}
 
@@ -164,6 +164,27 @@ export default {
   },
 
   methods: {
+    sortByPrice(a, b) {
+      let ap = parseFloat(a.price.split(' ')[0])
+      let bp = parseFloat(b.price.split(' ')[0])
+
+      if (ap > bp) return 1;
+      if (ap < bp) return -1;
+      return 0
+    },
+
+    sortByBuy(a, b) {
+      if (a.buy.amount > b.buy.amount) return 1;
+      if (a.buy.amount < b.buy.amount) return -1;
+      return 0
+    },
+
+    sortBySell(a, b) {
+      if (a.sell.amount > b.sell.amount) return 1;
+      if (a.sell.amount < b.sell.amount) return -1;
+      return 0
+    },
+
     async clickOrder(a) {
       this.$router.push({name: 'order-id', params: {id: a.id }})
     },
