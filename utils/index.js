@@ -21,6 +21,10 @@ export function parseAsset(asset) {
     contract: asset.contract,
     amount: parseFloat(paths[0]),
 
+    get str() {
+      return `${this.symbol}@${this.contract}`
+    },
+
     get quantity () {
       // TODO Precision
       return this.amount.toFixed(4) + ' ' + this.symbol

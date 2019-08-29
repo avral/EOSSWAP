@@ -8,7 +8,15 @@ div
           .d-flex
             new-order-form(@submit="newOrder" v-if="user").mr-2 Create new order
 
-            el-input(size="small" v-model="search" placeholder="Filter by token").ml-2.mr-4
+            el-select(v-model="search" clearable placeholder="Select token" size="medium").ml-2.mr-2.w-25
+              el-option(
+                v-for="token in tokens"
+                :key="token"
+                :label="token"
+                :value="token"
+              )
+            el-input(size="medium" v-model="search" placeholder="Filter by token").ml-2.mr-4.w-75
+
 
             .ml-auto
               span(v-if="user")
@@ -16,6 +24,7 @@ div
                 el-button(v-if="user" size="mini" @click="logout").ml-3 logout
 
               el-button(@click="login" type="primary" size="small" v-if="!user").ml-auto Sign In via Scatter
+
       .row
         .col
           el-table(:data="filteredItems" @row-click="clickOrder" row-class-name="order-row")
@@ -50,7 +59,7 @@ div
 
             el-table-column(label="Price" width="250" sortable :sort-method="sortByPrice")
               template(slot-scope="scope")
-                span.ml-2 {{ scope.row.price }}
+                b.ml-2 {{ scope.row.price }}
 
     el-tab-pane(label='My balances')
       el-alert(v-if="!user" title="Please login" :closable="false" show-icon type="info")
@@ -148,12 +157,23 @@ export default {
     ...mapGetters(['user']),
     ...mapGetters('chain', ['rpc']),
 
+    tokens() {
+      let tokens = []
+
+      this.orders.map(order => {
+        if (!tokens.includes(order.sell.str)) tokens.push(order.sell.str)
+        if (!tokens.includes(order.buy.str)) tokens.push(order.buy.str)
+      })
+
+      return tokens
+    },
+
     filteredItems() {
       return this.orders.filter(i => {
-        if(i.buy.quantity.toLowerCase().indexOf(this.search.toLowerCase()) > -1)
+        if(i.buy.str.toLowerCase().includes(this.search.toLowerCase()))
           return true
 
-        if(i.sell.quantity.toLowerCase().indexOf(this.search.toLowerCase()) > -1)
+        if(i.sell.str.toLowerCase().includes(this.search.toLowerCase()))
           return true
       });
     }
@@ -313,5 +333,9 @@ export default {
 <style>
 .order-row {
   cursor: pointer;
+}
+
+.select-token {
+  width: 200px;
 }
 </style>
