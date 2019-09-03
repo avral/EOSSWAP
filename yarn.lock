@@ -1066,6 +1066,25 @@
     mustache "^2.3.0"
     stack-trace "0.0.10"
 
+"@scatterjs/core@^2.7.44":
+  version "2.7.44"
+  resolved "https://registry.yarnpkg.com/@scatterjs/core/-/core-2.7.44.tgz#da6db19fd02fdae37dc251864f28ab11844bf223"
+  integrity sha512-pvSo6stDkSTD/rByi5QoWJW9GKbp2y5vGlwKhxENzluy3ozUKXNjzpqDhQJJgUhsGesIQQTJkM2XBV3Yup/4Ng==
+  dependencies:
+    create-hash "^1.2.0"
+    device-uuid "^1.0.4"
+    es6-promise "^4.2.4"
+    get-random-values "^1.2.0"
+    isomorphic-ws "^4.0.1"
+    ws "^6.1.0"
+
+"@scatterjs/eosjs2@^1.5.26":
+  version "1.5.26"
+  resolved "https://registry.yarnpkg.com/@scatterjs/eosjs2/-/eosjs2-1.5.26.tgz#1d0dc10864caeb11d6ca1bcc8528d9b4c7084672"
+  integrity sha512-QLomEuiB1E56ARBXqiAclW5mYVUtpyxz3mgcF27QF7xawWBfhoB3WUOnxL8ksMtKJpCTHj05zGHVmtBn6rZNeg==
+  dependencies:
+    "@scatterjs/core" "^2.7.44"
+
 "@sentry/browser@^4.6.6":
   version "4.6.6"
   resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-4.6.6.tgz#58ac3de9956c8a7033f3830c3ee9e011c2bd133a"
@@ -3221,6 +3240,11 @@ detect-libc@^1.0.2:
   resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-1.0.3.tgz#fa137c4bd698edf55cd5cd02ac559f91a4c4ba9b"
   integrity sha1-+hN8S9aY7fVc1c0CrFWfkaTEups=
 
+device-uuid@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/device-uuid/-/device-uuid-1.0.4.tgz#f6973e58f19b92a237aeca7b16a395ae7195a883"
+  integrity sha1-9pc+WPGbkqI3rsp7FqOVrnGVqIM=
+
 diff@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/diff/-/diff-4.0.1.tgz#0c667cb467ebbb5cea7f14f135cc2dba7780a8ff"
@@ -3452,7 +3476,7 @@ eosjs-ecc@4.0.4:
     ecurve "^1.0.5"
     randombytes "^2.0.5"
 
-eosjs@^20.0.0-beta3:
+eosjs@20.0.0:
   version "20.0.0"
   resolved "https://registry.yarnpkg.com/eosjs/-/eosjs-20.0.0.tgz#43940abfe15cd191ce4027d60294036e914613e9"
   integrity sha512-Ak9CPtZgCFayUmq43X3Nsn4v67lkLfSzEdTUfMk1XAWA5s4HRn7lBTeTeDCzJ/rggi+dZ170VeJwc5T3gPk4HQ==
@@ -7692,22 +7716,6 @@ sax@>=0.6.0, sax@^1.2.4, sax@~1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
   integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
-
-scatterjs-core@^2.7.7:
-  version "2.7.18"
-  resolved "https://registry.yarnpkg.com/scatterjs-core/-/scatterjs-core-2.7.18.tgz#7be773e7d793b2c7137462b2dc3c43cce1f92a07"
-  integrity sha512-2Zhe8/WBEQHuXM0QoJC00s6O2AgVH20UItHnVaRU6YkZ7XG8YmuoUt6jsPxhHLmvGjySyW1f7K2b5SS86UdI3A==
-  dependencies:
-    create-hash "^1.2.0"
-    es6-promise "^4.2.4"
-    get-random-values "^1.2.0"
-    isomorphic-ws "^4.0.1"
-    ws "^6.1.0"
-
-scatterjs-plugin-eosjs2@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/scatterjs-plugin-eosjs2/-/scatterjs-plugin-eosjs2-1.5.0.tgz#4e8e08859c82af7b9c0b275ea57c9739a373cc18"
-  integrity sha512-RIYGW+c4dH//jwcAflcnI2N+erzy2AHQwfqMr8CTMCRg2S8Drm/PWf/iDn1JHsjbyTv1+kIP335zWz7xP92iAQ==
 
 schema-utils@^1.0.0:
   version "1.0.0"

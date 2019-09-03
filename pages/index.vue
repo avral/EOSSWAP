@@ -257,8 +257,6 @@ export default {
     },
 
     async newOrder({ buy, sell }) {
-      console.log( buy, sell)
-
       const loading = this.$loading({
         lock: true,
         text: 'Wait for Scatter',

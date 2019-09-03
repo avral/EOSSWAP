@@ -53,7 +53,6 @@ import config from '~/config'
 import { transfer, cancelorder } from '~/store/chain.js'
 
 import { mapGetters } from 'vuex'
-import ScatterJS from 'scatterjs-core'
 
 
 export default {

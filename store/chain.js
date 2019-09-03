@@ -2,9 +2,10 @@ import config from '~/config'
 
 import fetch from 'node-fetch'
 import { configureScope } from '@sentry/browser'
-import ScatterJS from 'scatterjs-core'
-import ScatterEOS from 'scatterjs-plugin-eosjs2'
-import { Api, JsonRpc, RpcError } from 'eosjs'
+
+import ScatterJS from '@scatterjs/core';
+import ScatterEOS from '@scatterjs/eosjs2';
+import { Api, JsonRpc } from 'eosjs'
 
 ScatterJS.plugins(new ScatterEOS())
 
