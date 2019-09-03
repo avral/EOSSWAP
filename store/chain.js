@@ -26,7 +26,7 @@ export const actions = {
   async init({ state, commit, dispatch }) {
     console.log('App starting..')
 
-    await ScatterJS.connect('Ordersbook', { network }).then(v => commit('setScatterConnected', v))
+    await ScatterJS.connect('EOSSWAP', { network }).then(v => commit('setScatterConnected', v))
 
     if (state.scatterConnected) {
       let scatter_version
