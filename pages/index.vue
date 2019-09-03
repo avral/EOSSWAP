@@ -15,16 +15,16 @@ div
                 :label="token"
                 :value="token"
               )
-            el-input(size="medium" v-model="search" placeholder="Filter by token").ml-2.mr-4.w-75
+            el-input(size="medium" v-model="search" placeholder="Filter by token").ml-2.mr-3.w-75
 
 
             .ml-auto
               span(v-if="user")
-                a(:href="'https://jungle.eosx.io/account/' + user.name" target="_blank") {{ $store.state.user.name }}
-                el-button(v-if="user" size="mini" @click="logout").ml-3 logout
+                el-button(v-if="user" size="medium" @click.navite="logout")
+                  a(:href="'https://jungle.eosx.io/account/' + user.name" target="_blank") {{ $store.state.user.name }} 
+                  span  | logout
 
               el-button(@click="login" type="primary" size="small" v-if="!user").ml-auto Sign In via Scatter
-
       .row
         .col
           el-table(:data="filteredItems" @row-click="clickOrder" row-class-name="order-row")
