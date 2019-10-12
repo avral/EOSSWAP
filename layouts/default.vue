@@ -1,6 +1,11 @@
 <template lang="pug">
-.container.mb-5
-  .row
+.container
+  el-alert(title="Try new DEX with any tokens auto listing!").mt-4
+    .lead
+      a(href="https://eostokens.io" target="_blank") EOS Tokens
+      | - Is a new exchange, with automatic token listing and onchain limit matching. No commissions for beta, try it now!
+
+  .row.app-frame.mb-5
     .col-lg.m-auto
       .d-flex
         //nuxt-link(tag="span" :to="{name: 'index'}" style="cursor: pointer;") EOS Swap: 
@@ -98,8 +103,8 @@ export default {
   max-width: 300px;
 }
 
-.container {
-  margin-top: 100px;
+.app-frame {
+  margin-top: 40px;
 }
 
 footer {
