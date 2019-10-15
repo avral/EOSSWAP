@@ -1,4 +1,4 @@
-## [EOSSWAP.IO](https://eosswap.io)
+## [EOSSWAP.IO](https://swap.eostokens.io)
 > EOS trustless OTC trading  
 
 ![EOSSWAP](https://a.imge.to/2019/07/09/TlwaR.png)
