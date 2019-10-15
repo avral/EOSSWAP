@@ -21,7 +21,7 @@
           gh-btns-star(slug="avral/eosswap" show-count)
 
           el-tooltip(content="Join us on Telegram!" placement="top" effect="light")
-            a(href="https://t.me/eosswapio" target="_blank")
+            a(href="https://t.me/eostokensdex" target="_blank")
               img(src="telegram.png" height="40").ml-2
 
       el-alert(title="Scatter is not connected:" :closable="false" show-icon type="info" v-if="!$store.state.chain.scatterConnected").mt-2
