@@ -79,7 +79,7 @@ div
       history
 
     el-tab-pane(label='Rules & Information')
-      h2.lead.ml-3.mt-3 With EOSSWAP you can exchange any EOS.IO tokens, for any other EOS.IO tokens, 
+      h2.lead.ml-3.mt-3 With TOKENSWAP you can exchange any EOS.IO tokens, for any other EOS.IO tokens, 
            | atomically, without the participation of third parties! The tokens should comply with the 
            | standard eosio.token of the contract.
 

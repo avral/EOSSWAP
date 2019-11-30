@@ -58,7 +58,7 @@ import { mapGetters } from 'vuex'
 export default {
   head() {
     return {
-      title: `EOSSWAP | Sell ${this.order.sell.quantity} for ${this.order.buy.quantity} by omgnoob4ever`
+      title: `TOKENSWAP | Sell ${this.order.sell.quantity} for ${this.order.buy.quantity} by omgnoob4ever`
     }
   },
 

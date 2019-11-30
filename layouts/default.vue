@@ -8,7 +8,6 @@
   .row.app-frame.mb-5
     .col-lg.m-auto
       .d-flex
-        //nuxt-link(tag="span" :to="{name: 'index'}" style="cursor: pointer;") EOS Swap: 
         nuxt-link(tag="span" :to="{name: 'index'}" style="cursor: pointer;")
           img(src="~/assets/logo.svg").logo
 
