@@ -14,5 +14,8 @@ Vue.prototype.$tokenLogo = function(symbol, contract) {
   if (symbol == 'TKT' && contract == 'eossanguotkt')
     return require('@/assets/tokens/tkt_eossanguotkt.png')
 
+  if (symbol == 'CHT' && contract == 'crheroes1cht')
+    return require('@/assets/tokens/crheroes1cht-cht.png')
+
   return `https://raw.githubusercontent.com/BlockABC/eos-tokens/master/tokens/${contract}/${symbol}.png`
 }

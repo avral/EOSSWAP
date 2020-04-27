@@ -14,7 +14,10 @@ div
                 :key="token"
                 :label="token"
                 :value="token"
-              )
+              ) 
+                TokenImage(:src="$tokenLogo(token.split('@')[0], token.split('@')[1])" height="25").mr-2
+                span  {{ token }}
+
             el-input(size="medium" v-model="search" placeholder="Filter by token").ml-2.mr-3.w-75
 
 

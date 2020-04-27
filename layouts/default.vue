@@ -1,6 +1,11 @@
 <template lang="pug">
-.container.mb-5
-  .row
+.container
+  el-alert(title="Try new DEX with any tokens auto listing!").mt-4
+    .lead
+      a(href="https://eostokens.io" target="_blank") EOS Tokens
+      | - Is a new exchange, with automatic token listing and onchain limit matching. No commissions for beta, try it now!
+
+  .row.app-frame.mb-5
     .col-lg.m-auto
       .d-flex
         //nuxt-link(tag="span" :to="{name: 'index'}" style="cursor: pointer;") EOS Swap: 
@@ -16,7 +21,7 @@
           gh-btns-star(slug="avral/eosswap" show-count)
 
           el-tooltip(content="Join us on Telegram!" placement="top" effect="light")
-            a(href="https://t.me/eosswapio" target="_blank")
+            a(href="https://t.me/eostokensdex" target="_blank")
               img(src="telegram.png" height="40").ml-2
 
       el-alert(title="Scatter is not connected:" :closable="false" show-icon type="info" v-if="!$store.state.chain.scatterConnected").mt-2
@@ -98,8 +103,8 @@ export default {
   max-width: 300px;
 }
 
-.container {
-  margin-top: 100px;
+.app-frame {
+  margin-top: 40px;
 }
 
 footer {
