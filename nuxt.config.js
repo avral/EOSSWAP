@@ -4,7 +4,7 @@ const isSPA = process.argv.includes('--spa')
 const isDev = process.env.npm_lifecycle_event == 'dev'
 
 
-const desc = 'With EOSSWAP you can exchange any EOS.IO tokens, for any other EOS.IO tokens, atomically, without the participation of third parties!'
+const desc = 'With TOKENSWAP you can exchange any EOS.IO tokens, for any other EOS.IO tokens, atomically, without the participation of third parties!'
 
 module.exports = {
   env: {
@@ -16,7 +16,7 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: 'EOSSWAP | EOSIO Trustless tokens swaps.',
+    title: 'TOKENSWAP | EOSIO Trustless tokens swaps.',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },

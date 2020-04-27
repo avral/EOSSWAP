@@ -14,7 +14,10 @@ div
                 :key="token"
                 :label="token"
                 :value="token"
-              )
+              ) 
+                TokenImage(:src="$tokenLogo(token.split('@')[0], token.split('@')[1])" height="25").mr-2
+                span  {{ token }}
+
             el-input(size="medium" v-model="search" placeholder="Filter by token").ml-2.mr-3.w-75
 
 
@@ -76,7 +79,7 @@ div
       history
 
     el-tab-pane(label='Rules & Information')
-      h2.lead.ml-3.mt-3 With EOSSWAP you can exchange any EOS.IO tokens, for any other EOS.IO tokens, 
+      h2.lead.ml-3.mt-3 With TOKENSWAP you can exchange any EOS.IO tokens, for any other EOS.IO tokens, 
            | atomically, without the participation of third parties! The tokens should comply with the 
            | standard eosio.token of the contract.
 
