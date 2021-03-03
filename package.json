@@ -40,7 +40,7 @@
     "eslint-plugin-html": "^5.0.0",
     "eslint-plugin-vue": "^4.0.0",
     "nodemon": "^1.11.0",
-    "pug": "^2.0.3",
+    "pug": "^3.0.1",
     "pug-plain-loader": "^1.0.0"
   }
 }
