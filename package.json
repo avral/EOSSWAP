@@ -28,7 +28,7 @@
     "eosjs": "20.0.0",
     "esm": "^3.2.25",
     "js-yaml": "^3.13.1",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.7",
     "nuxt": "^2.0.0",
     "vue-github-buttons": "^3.1.0",
     "webpack-bundle-analyzer": "^3.3.2"
